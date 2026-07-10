@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 export const ScrollReveal = ({ 
     children, 
     delay = 0, 
-    duration = 1000, 
+    duration = 200, 
     direction = "up",
     className = "" 
 }) => {
@@ -18,7 +18,7 @@ export const ScrollReveal = ({
                 }
             },
             {
-                threshold: 0.1, // Trigger when 10% is visible
+                threshold: 0.05, // Trigger when 5% is visible for faster response
             }
         );
 
@@ -44,13 +44,13 @@ export const ScrollReveal = ({
 
         switch (direction) {
             case "up":
-                return { opacity: 0, transform: "translateY(30px)" };
+                return { opacity: 0, transform: "translateY(10px)" };
             case "down":
-                return { opacity: 0, transform: "translateY(-30px)" };
+                return { opacity: 0, transform: "translateY(-10px)" };
             case "left":
-                return { opacity: 0, transform: "translateX(30px)" };
+                return { opacity: 0, transform: "translateX(10px)" };
             case "right":
-                return { opacity: 0, transform: "translateX(-30px)" };
+                return { opacity: 0, transform: "translateX(-10px)" };
             default:
                 return { opacity: 0 };
         }
@@ -62,7 +62,7 @@ export const ScrollReveal = ({
             className={className}
             style={{
                 transitionProperty: "opacity, transform",
-                transitionTimingFunction: "cubic-bezier(0.16, 1, 0.3, 1)",
+                transitionTimingFunction: "ease-out",
                 transitionDuration: `${duration}ms`,
                 transitionDelay: `${delay}ms`,
                 willChange: "transform, opacity",

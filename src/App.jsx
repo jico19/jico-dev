@@ -8,7 +8,8 @@ import Footer from "./components/Footer"
 function App() {
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen bg-zinc-950 crt-screen text-zinc-100 selection:bg-accent selection:text-zinc-950 relative">
+      <div className="scanline"></div>
       <Navbar />
       <Hero />
       <Projects />

@@ -99,15 +99,15 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="sticky top-0 z-50 bg-zinc-900/80 backdrop-blur-md border-b border-zinc-800/80">
+            <nav className="sticky top-0 z-50 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-700">
                 <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
                     <a
                         href="#home"
                         onClick={(e) => handleScroll(e, "home")}
-                        className="text-xl font-bold tracking-wide text-zinc-100 hover:opacity-80 transition-opacity"
+                        className="text-sm font-bold tracking-wide text-accent hover:opacity-80 btn-transition"
                     >
-                        JICO
+                        jico@portfolio:~$
                     </a>
 
                     {/* Desktop Navigation */}
@@ -120,20 +120,20 @@ const Navbar = () => {
                                     className={`
                                         relative
                                         px-3 py-1.5
-                                        rounded-lg
-                                        text-sm
+                                        rounded-none
+                                        text-xs
                                         font-medium
                                         transition-all
-                                        duration-300
+                                        btn-transition
                                         border
                                         cursor-pointer
                                         ${activeSection === item.id
-                                            ? "bg-zinc-800/90 text-zinc-100 border-zinc-700 shadow-md shadow-black/20"
-                                            : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40 border-transparent"
+                                            ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
+                                            : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
                                         }
                                     `}
                                 >
-                                    {item.label}
+                                    {activeSection === item.id ? "> " : "$ "}{item.label.toLowerCase()}
                                 </a>
                             </li>
                         ))}
@@ -145,17 +145,17 @@ const Navbar = () => {
                         className="
                             md:hidden
                             p-2
-                            rounded-lg
+                            rounded-none
                             text-zinc-400
                             hover:text-zinc-100
-                            hover:bg-zinc-800/60
+                            hover:bg-zinc-900/60
                             transition-all
                             cursor-pointer
                             focus:outline-none
                         "
                         aria-label="Toggle menu"
                     >
-                        {isOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+                        {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
                     </button>
 
                 </div>
@@ -165,10 +165,10 @@ const Navbar = () => {
             <div
                 className={`
                     fixed inset-x-0 bottom-0 top-16 z-40
-                    bg-zinc-900/95 backdrop-blur-lg
-                    border-b border-zinc-800
+                    bg-zinc-950/95 backdrop-blur-lg
+                    border-b border-zinc-700
                     md:hidden
-                    transition-all duration-300 ease-out
+                    transition-all duration-200 ease-out
                     flex flex-col px-6 py-8 gap-4
                     ${isOpen
                         ? "opacity-100 translate-y-0"
@@ -186,20 +186,20 @@ const Navbar = () => {
                                     block
                                     w-full
                                     px-4 py-3
-                                    rounded-lg
-                                    text-base
+                                    rounded-none
+                                    text-sm
                                     font-medium
                                     transition-all
-                                    duration-200
+                                    btn-transition
                                     border
                                     cursor-pointer
                                     ${activeSection === item.id
-                                        ? "bg-zinc-800 text-zinc-100 border-zinc-700 shadow-md"
-                                        : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/40 border-transparent"
+                                        ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
+                                        : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
                                     }
                                 `}
                             >
-                                {item.label}
+                                {activeSection === item.id ? "> " : "$ "}{item.label.toLowerCase()}
                             </a>
                         </li>
                     ))}
