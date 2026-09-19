@@ -6,6 +6,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>jerwin@portfolio: ~</title>
     <meta name="description" content="Portfolio of Jerwin Quijano - Backend and Full Stack Developer. Built using Django, React, and PostgreSQL with a custom CLI/terminal design." />
+    <script>
+      (function () {
+        try {
+          var theme = localStorage.getItem("jico:theme");
+          if (theme !== "dark" && theme !== "light") {
+            theme = window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+          }
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
+    <script>
+      (function () {
+        try {
+          var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          var override = window.localStorage.getItem("jico:motion-override");
+          if (reduced && override !== "on") {
+            document.documentElement.classList.add("motion-reduced");
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

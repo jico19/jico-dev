@@ -1,27 +1,48 @@
 import { useState, useEffect } from "react";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 import ScrollReveal from "./ScrollReveal";
+import { useAnimationsEnabled, getAnimationsEnabled } from "../lib/motion";
 
 const Hero = () => {
-    const [text, setText] = useState("");
-    const [roleText, setRoleText] = useState("");
-    const [showCursor] = useState(true);
-
     const fullText = "Hi, I'm Jerwin";
     const fullRole = "Backend Developer | Full Stack Developer";
+    const animationsEnabled = useAnimationsEnabled();
+
+    const [text, setText] = useState(() =>
+        getAnimationsEnabled()
+            ? ""
+            : fullText
+    );
+    const [roleText, setRoleText] = useState(() =>
+        getAnimationsEnabled()
+            ? ""
+            : fullRole
+    );
+    const [showCursor] = useState(true);
 
     useEffect(() => {
+        if (!animationsEnabled) {
+            const snap = setTimeout(() => {
+                setText(fullText);
+                setRoleText(fullRole);
+            }, 0);
+            return () => clearTimeout(snap);
+        }
+
+        let roleTimeout = null;
+        let roleInterval = null;
         let nameIndex = 0;
+
         const nameInterval = setInterval(() => {
             setText(fullText.slice(0, nameIndex + 1));
             nameIndex++;
             if (nameIndex >= fullText.length) {
                 clearInterval(nameInterval);
-                
+
                 // Start typing role text after a small delay
-                setTimeout(() => {
+                roleTimeout = setTimeout(() => {
                     let roleIndex = 0;
-                    const roleInterval = setInterval(() => {
+                    roleInterval = setInterval(() => {
                         setRoleText(fullRole.slice(0, roleIndex + 1));
                         roleIndex++;
                         if (roleIndex >= fullRole.length) {
@@ -34,8 +55,10 @@ const Hero = () => {
 
         return () => {
             clearInterval(nameInterval);
+            if (roleTimeout) clearTimeout(roleTimeout);
+            if (roleInterval) clearInterval(roleInterval);
         };
-    }, []);
+    }, [animationsEnabled, fullText, fullRole]);
 
     const tech_stacks = [
         { label: 'Django' },
@@ -117,12 +140,10 @@ const Hero = () => {
 
                         {/* Role */}
                         <div>
-                            <p className="text-sm md:text-base font-medium text-accent">
-                                &gt; {roleText}
-                                {roleText.length > 0 && roleText.length < fullRole.length && (
-                                    <span className="inline-block w-2 h-4 bg-accent ml-0.5 cursor-blink align-middle" />
-                                )}
-                            </p>
+<p className="text-sm md:text-base font-medium text-accent">
+    &gt; {roleText}
+    <span className="inline-block w-2 h-4 bg-accent ml-0.5 cursor-blink align-middle" />
+</p>
                         </div>
 
                         {/* Tech Stack */}
@@ -168,23 +189,23 @@ const Hero = () => {
                             >
                                 $ run projects.sh
                             </a>
-
-                            <button
-                                onClick={() => {
-                                    // Normally download resume, for now show alert or placeholder
-                                    window.open('/resume.pdf', '_blank');
-                                }}
+                            <a
+                                href="/resume.pdf"
+                                target="_blank"
+                                rel="noopener noreferrer"
                                 className="
                                 px-4 py-2 rounded-none
-                                border border-zinc-700 text-zinc-100 bg-transparent
-                                hover:border-accent hover:text-accent
+                                border border-zinc-700
+                                text-zinc-100
+                                hover:text-accent
+                                hover:border-accent
                                 hover:-translate-y-[2px] active:translate-y-0
                                 transition-all btn-transition
                                 text-center inline-block cursor-pointer text-xs
                             "
                             >
                                 $ cat resume.pdf
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

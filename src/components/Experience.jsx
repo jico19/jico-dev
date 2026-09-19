@@ -33,6 +33,8 @@ const Experience = () => {
     return (
         <section id="experience" className="max-w-4xl mx-auto px-6 py-12 md:py-16">
             <div className="mb-8 border-l-2 border-accent pl-4">
+                <span className="block text-[10px] text-zinc-600 mb-1 select-none">[ 02 ] ~/experience</span>
+
                 <TerminalPromptReveal 
                     command="cat experience.json" 
                     onComplete={() => setShowContent(true)} 

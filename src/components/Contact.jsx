@@ -3,7 +3,7 @@ import { FaGithub, FaFacebook, FaEnvelope } from "react-icons/fa";
 import TerminalPromptReveal from "./TerminalPromptReveal";
 
 const Contact = () => {
-    const [copied, setCopied] = useState(false);
+    const [copyState, setCopyState] = useState("idle"); // idle | copied | error
     const [showContent, setShowContent] = useState(false);
 
     const contacts = [
@@ -22,20 +22,25 @@ const Contact = () => {
     ];
 
     const copyEmail = async () => {
-        await navigator.clipboard.writeText(
-            "jerwinquijano19@gmail.com"
-        );
+        const email = "jerwinquijano19@gmail.com";
 
-        setCopied(true);
+        try {
+            await navigator.clipboard.writeText(email);
+            setCopyState("copied");
+        } catch {
+            setCopyState("error");
+        }
 
         setTimeout(() => {
-            setCopied(false);
+            setCopyState("idle");
         }, 2000);
     };
 
     return (
         <section id="contact" className="max-w-4xl mx-auto px-6 py-12 md:py-16">
             <div className="mb-8 border-l-2 border-accent pl-4">
+                <span className="block text-[10px] text-zinc-600 mb-1 select-none">[ 03 ] ~/contact</span>
+
                 <TerminalPromptReveal 
                     command="ping -c 1 contact" 
                     onComplete={() => setShowContent(true)} 
@@ -75,7 +80,7 @@ const Contact = () => {
                     "
                 >
                     {/* Terminal Header */}
-                    <div className="bg-zinc-850 px-3 py-1.5 border-b border-zinc-700 flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none">
+                    <div className="bg-zinc-800 px-3 py-1.5 border-b border-zinc-700 flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none">
                         <div className="flex gap-1">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C5C] block"></span>
                             <span className="w-1.5 h-1.5 rounded-full bg-[#E6C229] block"></span>
@@ -101,10 +106,12 @@ const Contact = () => {
                             <div className="text-zinc-100 font-semibold break-all text-[11px] sm:text-xs">
                                 jerwinquijano19@gmail.com
                             </div>
-                            <div className="text-accent text-[10px] font-semibold">
-                                {copied
+                            <div className={`text-[10px] font-semibold ${copyState === "error" ? "text-error" : "text-accent"}`}>
+                                {copyState === "copied"
                                     ? "[ SUCCESS ] copied!"
-                                    : "[ CLICK TO COPY ]"}
+                                    : copyState === "error"
+                                        ? "[ ERROR ] copy failed"
+                                        : "[ CLICK TO COPY ]"}
                             </div>
                         </div>
                     </div>
@@ -134,7 +141,7 @@ const Contact = () => {
                             "
                         >
                             {/* Terminal Header */}
-                            <div className="bg-zinc-850 px-3 py-1.5 border-b border-zinc-700 flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none">
+                            <div className="bg-zinc-800 px-3 py-1.5 border-b border-zinc-700 flex items-center justify-between text-[10px] font-mono text-zinc-400 select-none">
                                 <div className="flex gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#FF5C5C] block"></span>
                                     <span className="w-1.5 h-1.5 rounded-full bg-[#E6C229] block"></span>

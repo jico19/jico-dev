@@ -1,9 +1,12 @@
 import { useState, useEffect } from "react";
 import { FiMenu, FiX } from "react-icons/fi";
+import MotionToggle from "./MotionToggle";
+import ThemeToggle from "./ThemeToggle";
 
 const Navbar = () => {
     const [activeSection, setActiveSection] = useState("home");
     const [isOpen, setIsOpen] = useState(false);
+    const [scrollProgress, setScrollProgress] = useState(0);
 
     const sections = [
         { label: "Home", href: "#home", id: "home" },
@@ -77,6 +80,28 @@ const Navbar = () => {
         };
     }, [isOpen]);
 
+    // Close mobile menu with Escape key
+    useEffect(() => {
+        const handleKey = (e) => {
+            if (e.key === "Escape") {
+                setIsOpen(false);
+            }
+        };
+        window.addEventListener("keydown", handleKey);
+        return () => window.removeEventListener("keydown", handleKey);
+    }, []);
+
+    // Track scroll progress for the terminal-style progress bar
+    useEffect(() => {
+        const handleProgress = () => {
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            setScrollProgress(height > 0 ? Math.min(100, (window.scrollY / height) * 100) : 0);
+        };
+        window.addEventListener("scroll", handleProgress, { passive: true });
+        handleProgress();
+        return () => window.removeEventListener("scroll", handleProgress);
+    }, []);
+
     const handleScroll = (e, id) => {
         e.preventDefault();
         setIsOpen(false); // Close mobile drawer
@@ -99,7 +124,7 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className="sticky top-0 z-50 bg-zinc-950/90 backdrop-blur-md border-b border-zinc-700">
+            <nav className="sticky top-0 z-50 relative bg-zinc-950/90 backdrop-blur-md border-b border-zinc-700">
                 <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
 
                     <a
@@ -111,37 +136,45 @@ const Navbar = () => {
                     </a>
 
                     {/* Desktop Navigation */}
-                    <ul className="hidden md:flex items-center gap-1 sm:gap-4">
-                        {sections.map((item) => (
-                            <li key={item.label}>
-                                <a
-                                    href={item.href}
-                                    onClick={(e) => handleScroll(e, item.id)}
-                                    className={`
-                                        relative
-                                        px-3 py-1.5
-                                        rounded-none
-                                        text-xs
-                                        font-medium
-                                        transition-all
-                                        btn-transition
-                                        border
-                                        cursor-pointer
-                                        ${activeSection === item.id
-                                            ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
-                                            : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
-                                        }
-                                    `}
-                                >
-                                    {activeSection === item.id ? "> " : "$ "}{item.label.toLowerCase()}
-                                </a>
-                            </li>
-                        ))}
-                    </ul>
+                    <div className="hidden md:flex items-center gap-3">
+                        <ul className="flex items-center gap-1 sm:gap-4">
+                            {sections.map((item) => (
+                                <li key={item.label}>
+                                    <a
+                                        href={item.href}
+                                        onClick={(e) => handleScroll(e, item.id)}
+                                        className={`
+                                            relative
+                                            px-3 py-1.5
+                                            rounded-none
+                                            text-xs
+                                            font-medium
+                                            transition-all
+                                            btn-transition
+                                            border
+                                            cursor-pointer
+                                            ${activeSection === item.id
+                                                ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
+                                                : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
+                                            }
+                                        `}
+                                    >
+                                        {activeSection === item.id ? "> " : "$ "}{item.label.toLowerCase()}
+                                    </a>
+                                </li>
+                            ))}
+                        </ul>
+
+                        <ThemeToggle />
+                        <MotionToggle />
+                    </div>
 
                     {/* Mobile Menu Button */}
                     <button
                         onClick={() => setIsOpen(!isOpen)}
+                        aria-label="Toggle menu"
+                        aria-expanded={isOpen}
+                        aria-controls="mobile-menu"
                         className="
                             md:hidden
                             p-2
@@ -151,18 +184,32 @@ const Navbar = () => {
                             hover:bg-zinc-900/60
                             transition-all
                             cursor-pointer
-                            focus:outline-none
                         "
-                        aria-label="Toggle menu"
                     >
                         {isOpen ? <FiX size={20} /> : <FiMenu size={20} />}
                     </button>
 
                 </div>
+
+                {/* Scroll progress bar */}
+                <div
+                    aria-hidden="true"
+                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-zinc-800 pointer-events-none"
+                >
+                    <div
+                        className="h-full bg-accent transition-[width] duration-150 ease-out"
+                        style={{ width: `${scrollProgress}%` }}
+                    />
+                </div>
             </nav>
 
             {/* Mobile Navigation Drawer */}
             <div
+                id="mobile-menu"
+                role="dialog"
+                aria-modal="true"
+                aria-hidden={!isOpen}
+                aria-label="Navigation menu"
                 className={`
                     fixed inset-x-0 bottom-0 top-16 z-40
                     bg-zinc-950/95 backdrop-blur-lg
@@ -176,6 +223,11 @@ const Navbar = () => {
                     }
                 `}
             >
+                <div className="mb-2 flex items-center gap-2">
+                    <ThemeToggle />
+                    <MotionToggle />
+                </div>
+
                 <ul className="flex flex-col gap-4">
                     {sections.map((item) => (
                         <li key={item.label}>

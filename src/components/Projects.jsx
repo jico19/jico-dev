@@ -17,9 +17,13 @@ const Projects = () => {
         },
     ];
 
+    const isSingle = project_data.length === 1;
+
     return (
         <section id="projects" className="max-w-4xl mx-auto px-6 py-12 md:py-16">
             <div className="mb-8 border-l-2 border-accent pl-4">
+                <span className="block text-[10px] text-zinc-600 mb-1 select-none">[ 01 ] ~/projects</span>
+
                 <TerminalPromptReveal 
                     command="list-projects" 
                     onComplete={() => setShowContent(true)} 
@@ -35,7 +39,7 @@ const Projects = () => {
             </div>
 
             <div 
-                className={`grid gap-6 md:grid-cols-2 transition-all duration-300 ${
+                className={`grid gap-6 ${isSingle ? "md:grid-cols-1" : "md:grid-cols-2"} transition-all duration-300 ${
                     showContent ? "opacity-100 translate-y-0" : "opacity-0 translate-y-2 pointer-events-none"
                 }`}
             >
@@ -70,61 +74,72 @@ const Projects = () => {
                             <div className="w-8"></div>
                         </div>
 
-                        <div className="overflow-hidden">
-                            <img
-                                src={item.image}
-                                alt={item.label}
-                                className="
-                                    h-48
-                                    w-full
-                                    object-cover
-                                    transition-transform
-                                    duration-200
-                                    group-hover:scale-102
-                                "
-                            />
-                        </div>
-
-                        <div className="p-5 space-y-4 font-mono text-left">
-                            <div className="flex items-center justify-between">
-                                <h3 className="text-lg font-semibold text-zinc-100">
-                                    {item.label}
-                                </h3>
-
-                                <FiExternalLink
+                        <div className={`grid ${isSingle ? "md:grid-cols-2" : ""}`}>
+                            <div className={`relative overflow-hidden ${isSingle ? "h-48 md:h-full" : "h-48"}`}>
+                                <img
+                                    src={item.image}
+                                    alt={`${item.label} project preview`}
                                     className="
-                                        text-zinc-500
-                                        group-hover:text-accent
-                                        transition-colors
-                                        btn-transition
+                                        absolute inset-0
+                                        w-full
+                                        h-full
+                                        object-cover
+                                        transition-transform
+                                        duration-200
+                                        group-hover:scale-105
                                     "
-                                    size={16}
                                 />
                             </div>
 
-                            <p className="text-xs leading-relaxed text-zinc-400">
-                                {item.description}
-                            </p>
+                            <div className="p-5 space-y-4 font-mono text-left">
+                                <div className="flex items-center justify-between">
+                                    <h3 className="text-lg font-semibold text-zinc-100">
+                                        {item.label}
+                                    </h3>
 
-                            <div className="flex flex-wrap gap-x-2.5 gap-y-1">
-                                {item.tech.map((tech, techIdx) => (
-                                    <span
-                                        key={techIdx}
+                                    <FiExternalLink
                                         className="
-                                            text-xs
-                                            font-mono
-                                            text-accent
+                                            text-zinc-500
+                                            group-hover:text-accent
+                                            transition-colors
+                                            btn-transition
                                         "
-                                    >
-                                        [ {tech} ]
-                                    </span>
-                                ))}
-                            </div>
+                                        size={16}
+                                    />
+                                </div>
 
-                            <div className="flex items-center gap-1.5 text-xs text-accent font-semibold pt-1">
-                                <span>$ run demo.sh</span>
-                                <FiExternalLink size={12} />
+                                <p className="text-xs leading-relaxed text-zinc-400">
+                                    {item.description}
+                                </p>
+
+                                <div className="flex flex-wrap gap-x-2.5 gap-y-1">
+                                    {item.tech.map((tech, techIdx) => (
+                                        <span
+                                            key={techIdx}
+                                            className="
+                                                text-xs
+                                                font-mono
+                                                text-accent
+                                            "
+                                        >
+                                            [ {tech} ]
+                                        </span>
+                                    ))}
+                                </div>
                             </div>
+                        </div>
+
+                        <div className="border-t border-zinc-700 bg-zinc-800/60 px-5 py-2.5 flex items-center justify-between text-xs font-mono">
+                            <span className="text-accent font-semibold">$ run demo.sh</span>
+                            <FiExternalLink
+                                size={12}
+                                className="
+                                    text-zinc-500
+                                    group-hover:text-accent
+                                    transition-colors
+                                    btn-transition
+                                "
+                            />
                         </div>
                     </a>
                 ))}

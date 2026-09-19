@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAnimationsEnabled, getAnimationsEnabled } from "../lib/motion";
 
 export const TerminalPromptReveal = ({
     prompt = "guest@jico-dev:~$",
@@ -6,9 +7,15 @@ export const TerminalPromptReveal = ({
     delay = 0,
     onComplete
 }) => {
-    const [typed, setTyped] = useState("");
+    const animationsEnabled = useAnimationsEnabled();
+    const [typed, setTyped] = useState(() =>
+        getAnimationsEnabled()
+            ? ""
+            : command
+    );
     const [started, setStarted] = useState(false);
     const ref = useRef(null);
+    const intervalRef = useRef(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver(
@@ -35,23 +42,39 @@ export const TerminalPromptReveal = ({
     useEffect(() => {
         if (!started) return;
 
+        if (!animationsEnabled) {
+            const snap = setTimeout(() => {
+                setTyped(command);
+                if (onComplete) {
+                    onComplete();
+                }
+            }, 150);
+            return () => clearTimeout(snap);
+        }
+
         const timeout = setTimeout(() => {
             let index = 0;
-            const interval = setInterval(() => {
+            intervalRef.current = setInterval(() => {
                 setTyped(command.slice(0, index + 1));
                 index++;
                 if (index >= command.length) {
-                    clearInterval(interval);
+                    clearInterval(intervalRef.current);
+                    intervalRef.current = null;
                     if (onComplete) {
                         setTimeout(onComplete, 150);
                     }
                 }
             }, 25); // 25ms per char
-            return () => clearInterval(interval);
         }, delay);
 
-        return () => clearTimeout(timeout);
-    }, [started, command, delay]);
+        return () => {
+            clearTimeout(timeout);
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+                intervalRef.current = null;
+            }
+        };
+    }, [started, animationsEnabled, command, delay]);
 
     return (
         <div ref={ref} className="font-mono flex items-center select-none">

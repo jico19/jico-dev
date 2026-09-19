@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useAnimationsEnabled, getAnimationsEnabled } from "../lib/motion";
 
 export const ScrollReveal = ({ 
     children, 
@@ -7,10 +8,16 @@ export const ScrollReveal = ({
     direction = "up",
     className = "" 
 }) => {
-    const [isVisible, setIsVisible] = useState(false);
+    const animationsEnabled = useAnimationsEnabled();
+    const [isVisible, setIsVisible] = useState(() => !getAnimationsEnabled());
     const ref = useRef(null);
 
     useEffect(() => {
+        if (!animationsEnabled) {
+            const snap = setTimeout(() => setIsVisible(true), 0);
+            return () => clearTimeout(snap);
+        }
+
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
@@ -32,7 +39,7 @@ export const ScrollReveal = ({
                 observer.unobserve(currentRef);
             }
         };
-    }, []);
+    }, [animationsEnabled]);
 
     const getDirectionStyles = () => {
         if (isVisible) {
