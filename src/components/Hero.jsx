@@ -1,215 +1,284 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FaGithub, FaFacebook } from "react-icons/fa";
-import ScrollReveal from "./ScrollReveal";
-import { useAnimationsEnabled, getAnimationsEnabled } from "../lib/motion";
+import { ArrowUpRight } from "lucide-react";
+import { useAnimationsEnabled } from "../lib/motion";
+
+const ORIGINAL_TITLE = "Hi, I'm Jerwin Nico";
+const ASCII_CHARS = "!<>-_\\/[]{}—=+*^?#________0101";
+const ROLES = [
+    "Backend Developer",
+    "Full Stack Developer",
+    "API & Systems Builder",
+];
 
 const Hero = () => {
-    const fullText = "Hi, I'm Jerwin";
-    const fullRole = "Backend Developer | Full Stack Developer";
     const animationsEnabled = useAnimationsEnabled();
+    const tech_stacks = ["Django", "DRF", "Python", "PostgreSQL", "React"];
 
-    const [text, setText] = useState(() =>
-        getAnimationsEnabled()
-            ? ""
-            : fullText
-    );
-    const [roleText, setRoleText] = useState(() =>
-        getAnimationsEnabled()
-            ? ""
-            : fullRole
-    );
-    const [showCursor] = useState(true);
+    const social_links = [
+        {
+            label: "GitHub",
+            link: "https://github.com/jico19",
+            icon: FaGithub,
+        },
+        {
+            label: "Facebook",
+            link: "https://www.facebook.com/Ekkosecc",
+            icon: FaFacebook,
+        },
+    ];
+
+    const scrollToProjects = (e) => {
+        e.preventDefault();
+        const el = document.getElementById("projects");
+        if (el) {
+            const navOffset = 70;
+            const elementPosition = el.getBoundingClientRect().top;
+            const offsetPosition = elementPosition + window.scrollY - navOffset;
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: "smooth",
+            });
+            window.history.pushState(null, "", "#projects");
+        }
+    };
+
+    // ASCII Scrambler on hover
+    const [titleText, setTitleText] = useState(ORIGINAL_TITLE);
+    const scrambleIntervalRef = useRef(null);
+
+    const handleTitleMouseEnter = () => {
+        if (!animationsEnabled) return;
+
+        let iteration = 0;
+        const totalIterations = ORIGINAL_TITLE.length;
+
+        if (scrambleIntervalRef.current) {
+            clearInterval(scrambleIntervalRef.current);
+        }
+
+        scrambleIntervalRef.current = setInterval(() => {
+            setTitleText(
+                ORIGINAL_TITLE.split("")
+                    .map((char, index) => {
+                        if (char === " " || char === "'") return char;
+                        if (index < iteration) {
+                            return ORIGINAL_TITLE[index];
+                        }
+                        return ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
+                    })
+                    .join("")
+            );
+
+            if (iteration >= totalIterations) {
+                clearInterval(scrambleIntervalRef.current);
+                scrambleIntervalRef.current = null;
+                setTitleText(ORIGINAL_TITLE);
+            }
+
+            iteration += 1 / 2;
+        }, 30);
+    };
+
+    const handleTitleMouseLeave = () => {
+        if (scrambleIntervalRef.current) {
+            clearInterval(scrambleIntervalRef.current);
+            scrambleIntervalRef.current = null;
+        }
+        setTitleText(ORIGINAL_TITLE);
+    };
+
+    // Typewriter effect for Roles
+    const [currentRoleIndex, setCurrentRoleIndex] = useState(0);
+    const [displayedRole, setDisplayedRole] = useState(ROLES[0]);
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         if (!animationsEnabled) {
-            const snap = setTimeout(() => {
-                setText(fullText);
-                setRoleText(fullRole);
-            }, 0);
-            return () => clearTimeout(snap);
+            setDisplayedRole(ROLES[currentRoleIndex]);
+            return;
         }
 
-        let roleTimeout = null;
-        let roleInterval = null;
-        let nameIndex = 0;
+        const fullRole = ROLES[currentRoleIndex];
+        const typingSpeed = isDeleting ? 35 : 70;
 
-        const nameInterval = setInterval(() => {
-            setText(fullText.slice(0, nameIndex + 1));
-            nameIndex++;
-            if (nameIndex >= fullText.length) {
-                clearInterval(nameInterval);
-
-                // Start typing role text after a small delay
-                roleTimeout = setTimeout(() => {
-                    let roleIndex = 0;
-                    roleInterval = setInterval(() => {
-                        setRoleText(fullRole.slice(0, roleIndex + 1));
-                        roleIndex++;
-                        if (roleIndex >= fullRole.length) {
-                            clearInterval(roleInterval);
-                        }
-                    }, 20); // 20ms/char
-                }, 300);
+        const timer = setTimeout(() => {
+            if (!isDeleting) {
+                if (displayedRole.length < fullRole.length) {
+                    setDisplayedRole(fullRole.slice(0, displayedRole.length + 1));
+                } else {
+                    // Pause when word is completely typed
+                    setTimeout(() => setIsDeleting(true), 2000);
+                }
+            } else {
+                if (displayedRole.length > 0) {
+                    setDisplayedRole(fullRole.slice(0, displayedRole.length - 1));
+                } else {
+                    setIsDeleting(false);
+                    setCurrentRoleIndex((prev) => (prev + 1) % ROLES.length);
+                }
             }
-        }, 35); // 35ms/char
+        }, typingSpeed);
 
+        return () => clearTimeout(timer);
+    }, [displayedRole, isDeleting, currentRoleIndex, animationsEnabled]);
+
+    useEffect(() => {
         return () => {
-            clearInterval(nameInterval);
-            if (roleTimeout) clearTimeout(roleTimeout);
-            if (roleInterval) clearInterval(roleInterval);
+            if (scrambleIntervalRef.current) {
+                clearInterval(scrambleIntervalRef.current);
+            }
         };
-    }, [animationsEnabled, fullText, fullRole]);
-
-    const tech_stacks = [
-        { label: 'Django' },
-        { label: 'DRF' },
-        { label: 'Python' },
-        { label: 'PostgreSQL' },
-        { label: 'React' },
-    ];
-
-    const social_link = [
-        {
-            label: 'GitHub', link: 'https://github.com/jico19', icon: FaGithub,
-        },
-        {
-            label: 'Facebook', link: 'https://www.facebook.com/Ekkosecc', icon: FaFacebook,
-        },
-    ];
+    }, []);
 
     return (
-        <section id="home" className="max-w-4xl mx-auto px-6 py-12 md:py-20">
-            <ScrollReveal direction="up" duration={200}>
-                {/* Terminal Window */}
-                <div className="border border-zinc-700 bg-zinc-900 rounded-none overflow-hidden glow-green-hover transition-shadow duration-300">
-                    
-                    {/* Terminal Header */}
-                    <div className="bg-zinc-800 px-4 py-2.5 border-b border-zinc-700 flex items-center justify-between text-xs font-mono text-zinc-400 select-none">
-                        <div className="flex gap-2">
-                            <span className="w-3 h-3 rounded-full bg-[#FF5C5C] block"></span>
-                            <span className="w-3 h-3 rounded-full bg-[#E6C229] block"></span>
-                            <span className="w-3 h-3 rounded-full bg-[#00FF85] block"></span>
-                        </div>
-                        <div className="font-semibold text-zinc-300">jerwin@portfolio: ~</div>
-                        <div className="w-12"></div> {/* spacer */}
-                    </div>
+        <section id="home" className="max-w-[1080px] mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24">
+            <div className="max-w-3xl">
+                {/* H1 Title with ASCII scramble on hover */}
+                <h1
+                    onMouseEnter={handleTitleMouseEnter}
+                    onMouseLeave={handleTitleMouseLeave}
+                    className="animate-fade-up text-4xl sm:text-5xl md:text-6xl font-semibold tracking-[-0.03em] text-text-main leading-[1.08] mb-3 cursor-default select-none font-sans"
+                    style={{ animationDelay: "60ms" }}
+                >
+                    {titleText}
+                </h1>
 
-                    {/* Terminal Body */}
-                    <div className="p-6 space-y-6 font-mono text-left">
-                        
-                        {/* Prompt Line */}
-                        <div className="text-zinc-500 text-xs">
-                            guest@jico-dev:~$ cat intro.txt
-                        </div>
+                {/* Role with Typewriter effect */}
+                <p
+                    className="animate-fade-up text-xl md:text-2xl text-text-muted font-normal mb-6 min-h-[1.75em] flex items-center font-mono"
+                    style={{ animationDelay: "120ms" }}
+                >
+                    <span>{displayedRole}</span>
+                    <span
+                        className="inline-block w-[2px] h-[1em] ml-1 bg-accent animate-pulse"
+                        aria-hidden="true"
+                    />
+                </p>
 
-                        {/* Intro */}
-                        <div className="space-y-3">
-                            <h1 className="text-3xl md:text-5xl font-bold text-zinc-100 tracking-tight flex items-center flex-wrap">
-                                <span>{text}</span>
-                                {showCursor && (
-                                    <span className="inline-block w-2.5 h-8 md:h-11 bg-accent ml-1.5 cursor-blink align-middle" />
-                                )}
-                            </h1>
+                {/* About description */}
+                <p
+                    className="animate-fade-up text-base md:text-lg text-text-muted leading-relaxed max-w-[62ch] mb-6"
+                    style={{ animationDelay: "180ms" }}
+                >
+                    I build secure and scalable web applications using Django, Django REST Framework,
+                    PostgreSQL, and React. Currently pursuing a BSIT degree while developing
+                    backend-focused projects and REST APIs.
+                </p>
 
-                            <div className="flex gap-4 text-xs font-mono">
-                                {social_link.map((item, idx) => {
-                                    const Icon = item.icon;
-
-                                    return (
-                                        <a
-                                            key={idx}
-                                            href={item.link}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="
-                                                flex items-center gap-1.5
-                                                text-zinc-400
-                                                hover:text-accent
-                                                hover:translate-x-0.5
-                                                transition-all
-                                                btn-transition
-                                            "
-                                        >
-                                            <Icon size={14} />
-                                            <span>{item.label}</span>
-                                        </a>
-                                    );
-                                })}
-                            </div>
-                        </div>
-
-                        {/* Role */}
-                        <div>
-<p className="text-sm md:text-base font-medium text-accent">
-    &gt; {roleText}
-    <span className="inline-block w-2 h-4 bg-accent ml-0.5 cursor-blink align-middle" />
-</p>
-                        </div>
-
-                        {/* Tech Stack */}
-                        <div className="space-y-2">
-                            <div className="text-zinc-500 text-xs">$ list --skills</div>
-                            <div className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-accent">
-                                {tech_stacks.map((item, idx) => (
-                                    <span key={idx} className="font-mono">
-                                        [ {item.label} ]
-                                    </span>
-                                ))}
-                            </div>
-                        </div>
-
-                        {/* Description */}
-                        <div className="space-y-2">
-                            <div className="text-zinc-500 text-xs">$ cat about_me.md</div>
-                            <p className="max-w-2xl text-zinc-300 leading-relaxed text-xs md:text-sm">
-                                I build secure and scalable web applications
-                                using Django, Django REST Framework,
-                                PostgreSQL, and React. Currently pursuing
-                                a BSIT degree while developing backend-focused
-                                projects and REST APIs.
-                            </p>
-                        </div>
-
-                        {/* CTA */}
-                        <div className="flex flex-wrap gap-4 pt-2">
-                            <a
-                                href="#projects"
-                                onClick={(e) => {
-                                    e.preventDefault();
-                                    document.getElementById("projects")?.scrollIntoView({ behavior: "smooth" });
-                                }}
-                                className="
-                                px-4 py-2 rounded-none
-                                bg-accent text-zinc-950 font-bold
-                                hover:shadow-[0_0_15px_rgba(0,255,133,0.35)]
-                                hover:-translate-y-[2px] active:translate-y-0
-                                transition-all btn-transition
-                                text-center inline-block cursor-pointer text-xs
+                {/* Interactive Tech Stack Tags */}
+                <div
+                    className="animate-fade-up flex flex-wrap items-center gap-2 mb-8"
+                    style={{ animationDelay: "240ms" }}
+                    aria-label="Core technologies"
+                >
+                    {tech_stacks.map((tech) => (
+                        <span
+                            key={tech}
+                            className="
+                                px-2.5 py-1
+                                rounded-[6px]
+                                border border-border
+                                bg-surface
+                                text-xs
+                                font-mono
+                                text-text-muted
+                                hover:text-text-main
+                                hover:border-accent/40
+                                hover:-translate-y-0.5
+                                hover:bg-surface-2
+                                transition-all
+                                duration-200
+                                cursor-default
                             "
-                            >
-                                $ run projects.sh
-                            </a>
-                            <a
-                                href="/resume.pdf"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="
-                                px-4 py-2 rounded-none
-                                border border-zinc-700
-                                text-zinc-100
-                                hover:text-accent
-                                hover:border-accent
-                                hover:-translate-y-[2px] active:translate-y-0
-                                transition-all btn-transition
-                                text-center inline-block cursor-pointer text-xs
-                            "
-                            >
-                                $ cat resume.pdf
-                            </a>
-                        </div>
+                        >
+                            {tech}
+                        </span>
+                    ))}
+                </div>
+
+                {/* Actions & Social Links */}
+                <div
+                    className="animate-fade-up flex flex-wrap items-center gap-4 pt-1"
+                    style={{ animationDelay: "300ms" }}
+                >
+                    <a
+                        href="#projects"
+                        onClick={scrollToProjects}
+                        className="
+                            h-11 px-5
+                            rounded-[10px]
+                            bg-accent
+                            text-accent-contrast
+                            text-sm font-medium
+                            inline-flex items-center justify-center
+                            hover:-translate-y-0.5
+                            hover:brightness-95
+                            active:translate-y-0
+                            active:scale-[0.98]
+                            transition-all
+                            duration-200
+                            cursor-pointer
+                        "
+                    >
+                        View projects
+                    </a>
+
+                    <a
+                        href="/resume.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="
+                            group
+                            h-11 px-5
+                            rounded-[10px]
+                            border border-border
+                            bg-transparent
+                            text-text-main
+                            text-sm font-medium
+                            inline-flex items-center gap-1.5 justify-center
+                            hover:border-text-faint
+                            hover:bg-surface-2/50
+                            hover:-translate-y-0.5
+                            active:translate-y-0
+                            active:scale-[0.98]
+                            transition-all
+                            duration-200
+                        "
+                    >
+                        <span>Resume</span>
+                        <ArrowUpRight
+                            size={15}
+                            className="text-text-muted group-hover:text-text-main group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-200"
+                        />
+                    </a>
+
+                    <div className="flex items-center gap-4 ml-2 sm:ml-4">
+                        {social_links.map((item) => {
+                            const Icon = item.icon;
+                            return (
+                                <a
+                                    key={item.label}
+                                    href={item.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="
+                                        group
+                                        inline-flex items-center gap-1.5
+                                        text-sm text-text-muted
+                                        hover:text-text-main
+                                        transition-colors
+                                        duration-200
+                                    "
+                                >
+                                    <Icon size={16} className="group-hover:scale-110 transition-transform duration-200" />
+                                    <span>{item.label}</span>
+                                </a>
+                            );
+                        })}
                     </div>
                 </div>
-            </ScrollReveal>
+            </div>
         </section>
     );
 };

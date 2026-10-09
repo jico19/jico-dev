@@ -1,12 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useAnimationsEnabled, getAnimationsEnabled } from "../lib/motion";
 
-export const ScrollReveal = ({ 
-    children, 
-    delay = 0, 
-    duration = 200, 
-    direction = "up",
-    className = "" 
+export const ScrollReveal = ({
+    children,
+    delay = 0,
+    className = "",
 }) => {
     const animationsEnabled = useAnimationsEnabled();
     const [isVisible, setIsVisible] = useState(() => !getAnimationsEnabled());
@@ -14,67 +12,43 @@ export const ScrollReveal = ({
 
     useEffect(() => {
         if (!animationsEnabled) {
-            const snap = setTimeout(() => setIsVisible(true), 0);
-            return () => clearTimeout(snap);
+            return;
         }
+
+        const element = ref.current;
+        if (!element) return;
 
         const observer = new IntersectionObserver(
             ([entry]) => {
                 if (entry.isIntersecting) {
                     setIsVisible(true);
+                    observer.unobserve(element);
                 }
             },
             {
-                threshold: 0.05, // Trigger when 5% is visible for faster response
+                threshold: 0.12,
+                rootMargin: "0px 0px -40px 0px",
             }
         );
 
-        const currentRef = ref.current;
-        if (currentRef) {
-            observer.observe(currentRef);
-        }
+        observer.observe(element);
 
         return () => {
-            if (currentRef) {
-                observer.unobserve(currentRef);
-            }
+            observer.unobserve(element);
         };
     }, [animationsEnabled]);
 
-    const getDirectionStyles = () => {
-        if (isVisible) {
-            return {
-                opacity: 1,
-                transform: "translate(0, 0)",
-            };
-        }
-
-        switch (direction) {
-            case "up":
-                return { opacity: 0, transform: "translateY(10px)" };
-            case "down":
-                return { opacity: 0, transform: "translateY(-10px)" };
-            case "left":
-                return { opacity: 0, transform: "translateX(10px)" };
-            case "right":
-                return { opacity: 0, transform: "translateX(-10px)" };
-            default:
-                return { opacity: 0 };
-        }
-    };
+    const active = !animationsEnabled || isVisible;
 
     return (
         <div
             ref={ref}
-            className={className}
-            style={{
-                transitionProperty: "opacity, transform",
-                transitionTimingFunction: "ease-out",
-                transitionDuration: `${duration}ms`,
-                transitionDelay: `${delay}ms`,
-                willChange: "transform, opacity",
-                ...getDirectionStyles()
-            }}
+            className={`transition-[opacity,transform,filter] duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                active
+                    ? "opacity-100 translate-y-0 blur-none"
+                    : "opacity-0 translate-y-6 blur-[3px]"
+            } ${className}`}
+            style={{ transitionDelay: `${delay}ms` }}
         >
             {children}
         </div>

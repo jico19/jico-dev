@@ -26,9 +26,8 @@ const emitChange = () => {
 };
 
 export const getAnimationsEnabled = () => {
-    if (override === "on") return true;
     if (override === "reduced") return false;
-    return !systemPrefersReduced();
+    return true;
 };
 
 export const setAnimationsEnabled = (enabled) => {

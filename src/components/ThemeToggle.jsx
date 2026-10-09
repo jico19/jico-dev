@@ -1,39 +1,34 @@
-import { FiSun, FiMoon } from "react-icons/fi";
+import { Sun, Moon } from "lucide-react";
 import { useTheme, cycleTheme } from "../lib/theme";
 
 const ThemeToggle = ({ className = "" }) => {
     const theme = useTheme();
-    const dark = theme === "dark";
+    const isDark = theme === "dark";
 
     return (
         <button
             type="button"
             onClick={cycleTheme}
-            aria-pressed={dark}
-            aria-label={`Switch to ${dark ? "light" : "dark"} mode`}
-            title={`Switch to ${dark ? "light" : "dark"} mode`}
+            aria-label={`Switch to ${isDark ? "light" : "dark"} theme`}
+            title={`Switch to ${isDark ? "light" : "dark"} theme`}
             className={`
+                w-9 h-9
                 inline-flex
                 items-center
-                gap-1.5
-                px-2.5 py-1.5
-                rounded-none
-                text-xs
-                font-medium
-                transition-all
-                btn-transition
-                border
+                justify-center
+                rounded-[8px]
+                text-text-muted
+                hover:text-text-main
+                hover:bg-surface-2
+                border border-transparent
+                hover:border-border
+                transition-colors
                 cursor-pointer
-                select-none
-                ${dark
-                    ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
-                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
-                }
+                shrink-0
                 ${className}
             `}
         >
-            {dark ? <FiMoon size={13} /> : <FiSun size={13} />}
-            [{dark ? "DARK" : "LIGHT"}]
+            {isDark ? <Sun size={17} /> : <Moon size={17} />}
         </button>
     );
 };

@@ -10,27 +10,20 @@ const MotionToggle = ({ className = "" }) => {
             aria-pressed={enabled}
             title={
                 enabled
-                    ? "Animations enabled - click to disable"
-                    : "Animations reduced - click to enable"
+                    ? "Animations enabled - click to reduce motion"
+                    : "Animations reduced - click to enable animations"
             }
             className={`
-                px-2.5 py-1.5
-                rounded-none
                 text-xs
-                font-medium
-                transition-all
-                btn-transition
-                border
+                font-mono
+                text-text-faint
+                hover:text-text-muted
+                transition-colors
                 cursor-pointer
-                select-none
-                ${enabled
-                    ? "bg-zinc-900 text-accent border-zinc-700 glow-green"
-                    : "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-900/40 border-transparent"
-                }
                 ${className}
             `}
         >
-            [ MOTION: {enabled ? "ON" : "OFF"} ]
+            motion: {enabled ? "on" : "reduced"}
         </button>
     );
 };
