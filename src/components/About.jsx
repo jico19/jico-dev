@@ -62,7 +62,7 @@ const About = () => {
                             </span>
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
                                 <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                Philippines (UTC+8)
+                                Philippines
                             </span>
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
                                 <span className="w-1.5 h-1.5 rounded-full bg-accent" />
