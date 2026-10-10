@@ -12,6 +12,7 @@ import {
     SiDocker,
     SiPostman,
     SiLinux,
+    SiSqlite,
 } from "react-icons/si";
 
 const TechStack = () => {
@@ -32,6 +33,7 @@ const TechStack = () => {
             skills: [
                 { name: "PostgreSQL", icon: SiPostgresql, level: "Advanced" },
                 { name: "Supabase", icon: SiSupabase, level: "Proficient" },
+                { name: "Sqlite3", icon: SiSqlite, level: "Proficient" },
             ],
         },
         {

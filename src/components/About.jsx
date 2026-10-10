@@ -1,4 +1,5 @@
 import ScrollReveal from "./ScrollReveal";
+import AsciiPortrait from "./AsciiPortrait";
 import { Terminal, Code2, Server, Database } from "lucide-react";
 
 const About = () => {
@@ -41,21 +42,16 @@ const About = () => {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    {/* Bio Description */}
-                    <div className="lg:col-span-7 space-y-4 text-sm sm:text-base text-text-muted leading-relaxed">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
+                    {/* Left Column: Interactive ASCII Portrait & Quick Badges */}
+                    <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-4">
+                        <AsciiPortrait
+                            src="/me-pic.png"
+                            alt="Jerwin Nico Quijano"
+                            className="w-full max-w-[280px] sm:max-w-[320px] lg:max-w-none"
+                        />
 
-                        <p>
-                            Hello! I'm <span className="text-text-main font-medium">Jerwin Nico Quijano</span>, a full-stack developer based in the Philippines focused on AI-driven development and building practical, scalable web applications.
-                        </p>
-                        <p>
-                            I leverage AI tools to accelerate development, explore solutions, and turn ideas into working software. With a foundation in backend engineering, API development, database design, and secure system architecture, I build applications that solve real-world problems—from geospatial permit management systems to multi-tenant healthcare platforms.
-                        </p>
-                        <p>
-                            Beyond traditional development, I'm exploring how AI can improve the way software is designed, built, and delivered. I enjoy experimenting with new tools, integrating intelligent features into applications, and finding more effective ways to turn complex requirements into reliable software.
-                        </p>
-
-                        <div className="pt-2 flex flex-wrap gap-3">
+                        <div className="w-full flex flex-wrap gap-2 pt-1 justify-center lg:justify-start">
                             <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
                                 <span className="w-1.5 h-1.5 rounded-full bg-accent" />
                                 BS Information Technology
@@ -71,29 +67,44 @@ const About = () => {
                         </div>
                     </div>
 
-                    {/* Skill / Focus Highlights */}
-                    <div className="lg:col-span-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                        {highlights.map((item, idx) => {
-                            const Icon = item.icon;
-                            return (
-                                <div
-                                    key={idx}
-                                    className="p-4 rounded-[10px] border border-border bg-surface hover:border-text-faint/60 transition-colors"
-                                >
-                                    <div className="flex items-center gap-2.5 mb-1.5">
-                                        <div className="w-7 h-7 rounded-[6px] bg-bg border border-border flex items-center justify-center text-accent">
-                                            <Icon size={14} />
+                    {/* Right Column: Bio Narrative & Focus Highlights */}
+                    <div className="lg:col-span-8 space-y-6">
+                        <div className="space-y-4 text-sm sm:text-base text-text-muted leading-relaxed">
+                            <p>
+                                Hello! I'm <span className="text-text-main font-medium">Jerwin Nico Quijano</span>, a full-stack developer based in the Philippines focused on AI-driven development and building practical, scalable web applications.
+                            </p>
+                            <p>
+                                I leverage AI tools to accelerate development, explore solutions, and turn ideas into working software. With a foundation in backend engineering, API development, database design, and secure system architecture, I build applications that solve real-world problems—from geospatial permit management systems to multi-tenant healthcare platforms.
+                            </p>
+                            <p>
+                                Beyond traditional development, I'm exploring how AI can improve the way software is designed, built, and delivered. I enjoy experimenting with new tools, integrating intelligent features into applications, and finding more effective ways to turn complex requirements into reliable software.
+                            </p>
+                        </div>
+
+                        {/* Skill / Focus Highlights in 2x2 Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+                            {highlights.map((item, idx) => {
+                                const Icon = item.icon;
+                                return (
+                                    <div
+                                        key={idx}
+                                        className="p-4 rounded-[10px] border border-border bg-surface hover:border-text-faint/60 transition-colors"
+                                    >
+                                        <div className="flex items-center gap-2.5 mb-1.5">
+                                            <div className="w-7 h-7 rounded-[6px] bg-bg border border-border flex items-center justify-center text-accent">
+                                                <Icon size={14} />
+                                            </div>
+                                            <h3 className="text-sm font-semibold text-text-main">
+                                                {item.title}
+                                            </h3>
                                         </div>
-                                        <h3 className="text-sm font-semibold text-text-main">
-                                            {item.title}
-                                        </h3>
+                                        <p className="text-xs text-text-muted leading-relaxed pl-9.5">
+                                            {item.desc}
+                                        </p>
                                     </div>
-                                    <p className="text-xs text-text-muted leading-relaxed pl-9.5">
-                                        {item.desc}
-                                    </p>
-                                </div>
-                            );
-                        })}
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
             </ScrollReveal>
