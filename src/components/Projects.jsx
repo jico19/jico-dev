@@ -1,6 +1,6 @@
 import { useState } from "react";
 import farmPass from "../assets/projects/farmpass.jpeg";
-import { ArrowUpRight, Terminal, Image as ImageIcon, Braces, Sparkles } from "lucide-react";
+import { ArrowUpRight, Terminal, Image as ImageIcon, Braces, Sparkles, Ghost } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 
 const Projects = () => {
@@ -15,6 +15,8 @@ const Projects = () => {
             path: "~/projects/farmpass",
             image: farmPass,
             badge: "Municipal GIS & Biosecurity",
+            status: "Ongoing",
+            coordinates: "LAT: 13.96° N / LON: 121.52° E",
             tech: ["Django", "DRF", "React 19", "PostgreSQL", "PayMongo"],
             description:
                 "A full-stack municipal platform digitizing livestock transport permits and African Swine Fever (ASF) monitoring, featuring OCR validation, QR checkpoint verification, and GIS zoning maps.",
@@ -22,7 +24,7 @@ const Projects = () => {
             api_data: {
                 system: "FarmPass Biosecurity & Permitting",
                 client: "MAO Sariaya",
-                status: "200 OK [Production]",
+                status: "200 OK [Ongoing]",
                 backend: "Django REST Framework 3.14",
                 database: "PostgreSQL + PostGIS",
                 frontend: "React 19 + Tailwind",
@@ -40,6 +42,41 @@ const Projects = () => {
                 "[08:12:03] Binding REST /api/v1/permits: [ONLINE]",
                 "[08:12:04] 412 agricultural parcels verified",
                 "$ curl -I https://farmpass-ph.me/ -> 200 OK",
+            ],
+        },
+        {
+            label: "Healthcare SaaS Platform",
+            slug: "st-business-consulting",
+            path: "~/projects/st-business-consulting",
+            image: null,
+            badge: "Multi-Tenant Healthcare SaaS",
+            status: "Ongoing",
+            coordinates: "US: FL / IN / GA [MULTI-TENANT]",
+            tech: ["FastAPI", "React 19", "Supabase", "PostgreSQL", "Tailwind CSS"],
+            description:
+                "A multi-tenant healthcare SaaS platform built for ST Business Consulting, featuring state-scoped authorization across Florida, Indiana, and Georgia, cryptographic e-signatures, tamper-resistant audit logs, caregiver onboarding, and automated scheduling workflows.",
+            web_link: null,
+            api_data: {
+                system: "Healthcare SaaS Multi-Tenant Platform",
+                client: "ST Business Consulting",
+                status: "200 OK [Ongoing]",
+                backend: "FastAPI + Domain Services",
+                database: "Supabase + PostgreSQL",
+                frontend: "React 19 + Tailwind",
+                modules: [
+                    "Multi-tenant state data isolation (FL, IN, GA)",
+                    "Cryptographic e-signatures & audit logs",
+                    "Caregiver onboarding & credential tracking",
+                    "Client intake, care plans & scheduling",
+                ],
+            },
+            logs: [
+                "$ jico run --target healthcare-saas.service",
+                "[09:30:01] FastAPI domain services: [READY]",
+                "[09:30:02] Supabase PostgREST pool: [CONNECTED]",
+                "[09:30:03] State isolation policy (FL, IN, GA): [ENFORCED]",
+                "[09:30:04] Automated test suite: 235 tests passing [OK]",
+                "$ curl -I https://internal.stbc.health/healthz -> 200 OK",
             ],
         },
     ];
@@ -179,22 +216,40 @@ const Projects = () => {
                                             {/* TAB 1: GUI Preview Viewport */}
                                             {currentTab === "preview" && (
                                                 <div className="relative w-full h-full group/preview overflow-hidden bg-[#0A0A0B] flex items-center justify-center">
-                                                    <img
-                                                        src={item.image}
-                                                        alt={`${item.label} project screenshot`}
-                                                        className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover/preview:scale-[1.02]"
-                                                    />
+                                                    {item.image ? (
+                                                        <img
+                                                            src={item.image}
+                                                            alt={`${item.label} project screenshot`}
+                                                            className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover/preview:scale-[1.02]"
+                                                        />
+                                                    ) : (
+                                                        <div className="flex flex-col items-center justify-center gap-2.5 p-6 text-center select-none">
+                                                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-surface-2 border border-border text-accent shadow-xs">
+                                                                <Ghost size={24} className="animate-pulse" />
+                                                                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent animate-ping" />
+                                                                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />
+                                                            </div>
+                                                            <div className="space-y-0.5">
+                                                                <div className="text-xs font-mono font-medium text-text-main tracking-wider uppercase">
+                                                                    Coming Soon...
+                                                                </div>
+                                                                <div className="text-[10px] font-mono text-text-faint">
+                                                                    // preview under development
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    )}
 
                                                     {/* Desktop Corner Coordinates */}
                                                     <div className="hidden sm:block absolute top-2 left-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-text-faint pointer-events-none">
-                                                        [+] 1920x1080
+                                                        {item.image ? "[+] 1920x1080" : "[+] PLACEHOLDER"}
                                                     </div>
                                                     <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-accent pointer-events-none flex items-center gap-1">
                                                         <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                                        <span>LIVE</span>
+                                                        <span>{item.status ? item.status.toUpperCase() : "LIVE"}</span>
                                                     </div>
                                                     <div className="hidden sm:block absolute bottom-2 left-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-text-faint pointer-events-none">
-                                                        LAT: 13.96° N / LON: 121.52° E
+                                                        {item.coordinates || "LAT: 13.96° N / LON: 121.52° E"}
                                                     </div>
                                                 </div>
                                             )}
@@ -261,10 +316,16 @@ const Projects = () => {
                                     {/* Right: Project Information Pane (lg:col-span-5) */}
                                     <div className="lg:col-span-5 flex flex-col justify-center space-y-3">
                                         <div>
-                                            <div className="flex items-center gap-2 mb-1">
+                                            <div className="flex flex-wrap items-center gap-2 mb-1">
                                                 <span className="px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-[10px] font-mono text-accent">
                                                     {item.badge}
                                                 </span>
+                                                {item.status && (
+                                                    <span className="px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-[10px] font-mono text-text-muted flex items-center gap-1">
+                                                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                                        <span>{item.status}</span>
+                                                    </span>
+                                                )}
                                             </div>
                                             <h3 className="text-lg sm:text-xl font-semibold text-text-main">
                                                 {item.label}
@@ -301,35 +362,53 @@ const Projects = () => {
 
                                         {/* Action Button */}
                                         <div className="pt-2">
-                                            <a
-                                                href={item.web_link}
-                                                target="_blank"
-                                                rel="noopener noreferrer"
-                                                className="
-                                                    group/btn
-                                                    inline-flex items-center justify-center gap-1.5
-                                                    w-full sm:w-auto
-                                                    px-3.5 py-1.5
-                                                    rounded-[6px]
-                                                    border border-accent/40
-                                                    bg-accent/10
-                                                    text-xs font-mono font-medium text-text-main
-                                                    hover:border-accent
-                                                    hover:bg-accent
-                                                    hover:text-accent-contrast
-                                                    hover:-translate-y-0.5
-                                                    active:translate-y-0
-                                                    active:scale-[0.98]
-                                                    transition-all
-                                                    duration-150
-                                                "
-                                            >
-                                                <span>$ open live_site</span>
-                                                <ArrowUpRight
-                                                    size={13}
-                                                    className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-150"
-                                                />
-                                            </a>
+                                            {item.web_link ? (
+                                                <a
+                                                    href={item.web_link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="
+                                                        group/btn
+                                                        inline-flex items-center justify-center gap-1.5
+                                                        w-full sm:w-auto
+                                                        px-3.5 py-1.5
+                                                        rounded-[6px]
+                                                        border border-accent/40
+                                                        bg-accent/10
+                                                        text-xs font-mono font-medium text-text-main
+                                                        hover:border-accent
+                                                        hover:bg-accent
+                                                        hover:text-accent-contrast
+                                                        hover:-translate-y-0.5
+                                                        active:translate-y-0
+                                                        active:scale-[0.98]
+                                                        transition-all
+                                                        duration-150
+                                                    "
+                                                >
+                                                    <span>$ open live_site</span>
+                                                    <ArrowUpRight
+                                                        size={13}
+                                                        className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-150"
+                                                    />
+                                                </a>
+                                            ) : (
+                                                <div
+                                                    className="
+                                                        inline-flex items-center justify-center gap-1.5
+                                                        w-full sm:w-auto
+                                                        px-3.5 py-1.5
+                                                        rounded-[6px]
+                                                        border border-border
+                                                        bg-surface-2
+                                                        text-xs font-mono text-text-muted
+                                                        cursor-default
+                                                    "
+                                                >
+                                                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                                    <span>$ status: ongoing_development</span>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
