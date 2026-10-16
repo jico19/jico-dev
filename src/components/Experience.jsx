@@ -38,7 +38,7 @@ const Experience = () => {
                 {/* Section Header */}
                 <div className="mb-12">
                     <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        04 / Experience
+                        05 / Experience
                     </span>
                     <h2 id="experience-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Experience
@@ -51,54 +51,56 @@ const Experience = () => {
                 {/* Clean Timeline without any green glow */}
                 <div className="relative pl-6 sm:pl-8 border-l border-border space-y-12 ml-2 sm:ml-3">
                     {experiences.map((exp, idx) => (
-                        <article key={idx} className="group relative">
-                            {/* Clean timeline dot (no glow) */}
-                            <div
-                                aria-hidden="true"
-                                className={`
-                                    absolute -left-[29px] sm:-left-[37px] top-1.5
-                                    w-2 h-2 rounded-full
-                                    transition-transform duration-200 ease-out
-                                    group-hover:scale-125
-                                    ${exp.current
-                                        ? "bg-accent ring-4 ring-bg"
-                                        : "bg-text-faint ring-4 ring-bg group-hover:bg-text-muted"
-                                    }
-                                `}
-                            />
+                        <ScrollReveal key={idx} delay={idx * 140}>
+                            <article className="group relative">
+                                {/* Clean timeline dot (no glow) */}
+                                <div
+                                    aria-hidden="true"
+                                    className={`
+                                        absolute -left-[29px] sm:-left-[37px] top-1.5
+                                        w-2 h-2 rounded-full
+                                        transition-transform duration-200 ease-out
+                                        group-hover:scale-125
+                                        ${exp.current
+                                            ? "bg-accent ring-4 ring-bg"
+                                            : "bg-text-faint ring-4 ring-bg group-hover:bg-text-muted"
+                                        }
+                                    `}
+                                />
 
-                            {/* Role, Company and Date */}
-                            <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-4">
-                                <div>
-                                    <h3 className="text-lg font-semibold text-text-main group-hover:text-accent transition-colors duration-200">
-                                        {exp.title}
-                                    </h3>
-                                    <p className="text-sm text-text-muted">
-                                        {exp.company}
-                                    </p>
+                                {/* Role, Company and Date */}
+                                <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 mb-4">
+                                    <div>
+                                        <h3 className="text-lg font-semibold text-text-main group-hover:text-accent transition-colors duration-200">
+                                            {exp.title}
+                                        </h3>
+                                        <p className="text-sm text-text-muted">
+                                            {exp.company}
+                                        </p>
+                                    </div>
+
+                                    <span className="text-xs font-mono text-text-muted group-hover:text-text-main transition-colors duration-200 shrink-0">
+                                        {exp.period}
+                                    </span>
                                 </div>
 
-                                <span className="text-xs font-mono text-text-muted group-hover:text-text-main transition-colors duration-200 shrink-0">
-                                    {exp.period}
-                                </span>
-                            </div>
-
-                            {/* Responsibilities list with clean dot markers */}
-                            <ul className="space-y-2.5">
-                                {exp.responsibilities.map((item, i) => (
-                                    <li
-                                        key={i}
-                                        className="text-sm text-text-muted flex items-start gap-3 leading-relaxed hover:text-text-main transition-colors duration-150"
-                                    >
-                                        <span
-                                            aria-hidden="true"
-                                            className="w-1.5 h-1.5 rounded-full bg-text-faint shrink-0 mt-2 transition-colors duration-150"
-                                        />
-                                        <span>{item}</span>
-                                    </li>
-                                ))}
-                            </ul>
-                        </article>
+                                {/* Responsibilities list with clean dot markers */}
+                                <ul className="space-y-2.5">
+                                    {exp.responsibilities.map((item, i) => (
+                                        <li
+                                            key={i}
+                                            className="text-sm text-text-muted flex items-start gap-3 leading-relaxed hover:text-text-main transition-colors duration-150"
+                                        >
+                                            <span
+                                                aria-hidden="true"
+                                                className="w-1.5 h-1.5 rounded-full bg-text-faint shrink-0 mt-2 transition-colors duration-150"
+                                            />
+                                            <span>{item}</span>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </article>
+                        </ScrollReveal>
                     ))}
                 </div>
             </ScrollReveal>

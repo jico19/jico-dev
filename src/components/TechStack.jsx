@@ -1,3 +1,4 @@
+import { useEffect, useRef } from "react";
 import ScrollReveal from "./ScrollReveal";
 import {
     SiPython,
@@ -9,131 +10,246 @@ import {
     SiTailwindcss,
     SiSupabase,
     SiGit,
-    SiDocker,
     SiPostman,
-    SiLinux,
     SiSqlite,
+    SiDocker,
+    SiLinux,
+    SiRedis,
+    SiCelery,
 } from "react-icons/si";
+import { Layers, ArrowUpRight } from "lucide-react";
+import { navigate } from "../lib/router";
+import { rawAnimate } from "../lib/anime";
+import { useAnimationsEnabled } from "../lib/motion";
 
 const TechStack = () => {
-    const categories = [
-        {
-            title: "Backend & APIs",
-            description: "Core server-side development, RESTful APIs, and architectures.",
-            skills: [
-                { name: "Python", icon: SiPython, level: "Advanced" },
-                { name: "Django", icon: SiDjango, level: "Advanced" },
-                { name: "Django REST", icon: SiDjango, level: "Advanced" },
-                { name: "FastAPI", icon: SiFastapi, level: "Proficient" },
-            ],
-        },
-        {
-            title: "Databases & Cloud",
-            description: "Data modeling, relational integrity, migrations, and BaaS.",
-            skills: [
-                { name: "PostgreSQL", icon: SiPostgresql, level: "Advanced" },
-                { name: "Supabase", icon: SiSupabase, level: "Proficient" },
-                { name: "Sqlite3", icon: SiSqlite, level: "Proficient" },
-            ],
-        },
-        {
-            title: "Frontend Engineering",
-            description: "Interactive SPAs, state synchronization, and component design.",
-            skills: [
-                { name: "React 19", icon: SiReact, level: "Proficient" },
-                { name: "JavaScript", icon: SiJavascript, level: "Proficient" },
-                { name: "Tailwind CSS", icon: SiTailwindcss, level: "Advanced" },
-            ],
-        },
-        {
-            title: "Tools & DevOps",
-            description: "Version control, API testing, containers, and terminal tooling.",
-            skills: [
-                { name: "Git & GitHub", icon: SiGit, level: "Advanced" },
-                { name: "Postman", icon: SiPostman, level: "Proficient" },
-                { name: "Docker", icon: SiDocker, level: "Familiar" },
-                { name: "Linux / CLI", icon: SiLinux, level: "Proficient" },
-            ],
-        },
+    const track1Ref = useRef(null);
+    const track2Ref = useRef(null);
+    const anim1Ref = useRef(null);
+    const anim2Ref = useRef(null);
+    const animationsEnabled = useAnimationsEnabled();
+    // Stream rows for the kinetic moving ticker
+    const row1 = [
+        { name: "Python", icon: SiPython, level: "Advanced" },
+        { name: "Django", icon: SiDjango, level: "Advanced" },
+        { name: "FastAPI", icon: SiFastapi, level: "Proficient" },
+        { name: "PostgreSQL", icon: SiPostgresql, level: "Advanced" },
+        { name: "React 19", icon: SiReact, level: "Proficient" },
+        { name: "Tailwind CSS", icon: SiTailwindcss, level: "Advanced" },
+        { name: "Supabase", icon: SiSupabase, level: "Proficient" },
+        { name: "Git & GitHub", icon: SiGit, level: "Advanced" },
     ];
 
+    const row2 = [
+        { name: "Django REST", icon: SiDjango, level: "Advanced" },
+        { name: "SQLite3", icon: SiSqlite, level: "Proficient" },
+        { name: "JavaScript", icon: SiJavascript, level: "Proficient" },
+        { name: "Linux / CLI", icon: SiLinux, level: "Proficient" },
+        { name: "Docker", icon: SiDocker, level: "Familiar" },
+        { name: "Postman", icon: SiPostman, level: "Proficient" },
+        { name: "Redis", icon: SiRedis, level: "Familiar" },
+        { name: "Celery", icon: SiCelery, level: "Familiar" },
+    ];
+
+    useEffect(() => {
+        if (!animationsEnabled) {
+            anim1Ref.current?.pause?.();
+            anim2Ref.current?.pause?.();
+            return;
+        }
+
+        if (track1Ref.current) {
+            anim1Ref.current = rawAnimate(track1Ref.current, {
+                translateX: ["0%", "-50%"],
+                duration: 28000,
+                ease: "linear",
+                loop: true,
+                autoplay: true,
+            });
+        }
+
+        if (track2Ref.current) {
+            anim2Ref.current = rawAnimate(track2Ref.current, {
+                translateX: ["-50%", "0%"],
+                duration: 28000,
+                ease: "linear",
+                loop: true,
+                autoplay: true,
+            });
+        }
+
+        return () => {
+            anim1Ref.current?.pause?.();
+            anim2Ref.current?.pause?.();
+        };
+    }, [animationsEnabled]);
+
+    const handleMouseEnter = () => {
+        anim1Ref.current?.pause?.();
+        anim2Ref.current?.pause?.();
+    };
+
+    const handleMouseLeave = () => {
+        if (animationsEnabled) {
+            anim1Ref.current?.play?.();
+            anim2Ref.current?.play?.();
+        }
+    };
+
     return (
-        <section id="skills" aria-labelledby="skills-heading" className="max-w-[1080px] mx-auto px-6 py-16 md:py-24">
+        <section id="skills" aria-labelledby="skills-heading" className="max-w-[1080px] mx-auto px-6 py-12 md:py-16">
             <ScrollReveal>
                 {/* Section Header */}
-                <div className="mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        02 / Tech Stack
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
+                    <div>
+                        <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-1">
+                            02 / Tech Stack
+                        </span>
+                        <h2 id="skills-heading" className="text-2xl sm:text-3xl font-semibold tracking-tight text-text-main">
+                            Technologies & Tools
+                        </h2>
+                    </div>
+                    <span className="text-xs font-mono text-text-muted">
+                        // 16 dependencies
                     </span>
-                    <h2 id="skills-heading" className="text-3xl font-semibold tracking-tight text-text-main">
-                        Technologies & Tools
-                    </h2>
-                    <p className="mt-2 text-sm text-text-muted max-w-[60ch]">
-                        The languages, frameworks, and developer tools I work with daily to build production applications.
-                    </p>
                 </div>
 
-                {/* Categories Grid */}
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {categories.map((cat, idx) => (
+                {/* Main Tech Console Card */}
+                <div className="rounded-[12px] border border-border bg-surface overflow-hidden shadow-xs hover:border-text-faint/80 transition-colors">
+                    {/* Console Header Bar */}
+                    <div className="px-4 py-2 border-b border-border bg-bg/90 backdrop-blur-xs flex items-center justify-between text-xs font-mono text-text-faint">
+                        <div className="flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                            <span>env.manifest // core_stack</span>
+                        </div>
+                        <span className="text-[11px] text-text-muted">
+                            Kinetic Stream
+                        </span>
+                    </div>
+
+                    {/* KINETIC MOVING TICKER */}
+                    <div
+                        onMouseEnter={handleMouseEnter}
+                        onMouseLeave={handleMouseLeave}
+                        className="py-4 space-y-2.5 overflow-hidden relative select-none"
+                    >
+                        {/* Side fade masks for smooth infinite visual clipping */}
                         <div
-                            key={idx}
+                            aria-hidden="true"
+                            className="absolute top-0 bottom-0 left-0 w-12 bg-gradient-to-r from-surface to-transparent z-10 pointer-events-none"
+                        />
+                        <div
+                            aria-hidden="true"
+                            className="absolute top-0 bottom-0 right-0 w-12 bg-gradient-to-l from-surface to-transparent z-10 pointer-events-none"
+                        />
+
+                        {/* Track 1: Moving Left */}
+                        <div
+                            ref={track1Ref}
+                            className="flex w-max gap-2.5 will-change-transform"
+                        >
+                            {[...row1, ...row1, ...row1, ...row1].map((skill, idx) => {
+                                const Icon = skill.icon;
+                                return (
+                                    <div
+                                        key={`r1-${idx}`}
+                                        className="
+                                            group flex items-center gap-2
+                                            px-3 py-1.5
+                                            rounded-[6px]
+                                            bg-bg/70
+                                            border border-border/80
+                                            hover:border-accent/40
+                                            hover:bg-bg
+                                            transition-all
+                                            duration-150
+                                            cursor-default
+                                            shrink-0
+                                        "
+                                    >
+                                        <Icon
+                                            size={13}
+                                            className="text-text-muted group-hover:text-accent transition-colors shrink-0"
+                                        />
+                                        <span className="text-xs font-medium text-text-main group-hover:text-accent transition-colors whitespace-nowrap">
+                                            {skill.name}
+                                        </span>
+                                        <span className="text-[9px] font-mono text-text-faint group-hover:text-text-muted transition-colors whitespace-nowrap">
+                                            {skill.level}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+
+                        {/* Track 2: Moving Right */}
+                        <div
+                            ref={track2Ref}
+                            className="flex w-max gap-2.5 will-change-transform"
+                        >
+                            {[...row2, ...row2, ...row2, ...row2].map((skill, idx) => {
+                                const Icon = skill.icon;
+                                return (
+                                    <div
+                                        key={`r2-${idx}`}
+                                        className="
+                                            group flex items-center gap-2
+                                            px-3 py-1.5
+                                            rounded-[6px]
+                                            bg-bg/70
+                                            border border-border/80
+                                            hover:border-accent/40
+                                            hover:bg-bg
+                                            transition-all
+                                            duration-150
+                                            cursor-default
+                                            shrink-0
+                                        "
+                                    >
+                                        <Icon
+                                            size={13}
+                                            className="text-text-muted group-hover:text-accent transition-colors shrink-0"
+                                        />
+                                        <span className="text-xs font-medium text-text-main group-hover:text-accent transition-colors whitespace-nowrap">
+                                            {skill.name}
+                                        </span>
+                                        <span className="text-[9px] font-mono text-text-faint group-hover:text-text-muted transition-colors whitespace-nowrap">
+                                            {skill.level}
+                                        </span>
+                                    </div>
+                                );
+                            })}
+                        </div>
+                    </div>
+
+                    {/* Console Footer: Link to Dedicated Tech Page */}
+                    <div className="px-4 py-2.5 border-t border-border bg-bg/90 backdrop-blur-xs flex items-center justify-center">
+                        <a
+                            href="/tech"
+                            onClick={(e) => {
+                                e.preventDefault();
+                                navigate("/tech");
+                            }}
                             className="
-                                p-6
-                                rounded-[12px]
+                                inline-flex items-center gap-2
+                                px-4 py-1.5
+                                rounded-[6px]
+                                bg-surface-2
+                                hover:bg-surface
                                 border border-border
-                                bg-surface
-                                hover:border-text-faint/80
+                                hover:border-accent/40
+                                text-xs font-mono text-text-muted
+                                hover:text-text-main
                                 transition-all
-                                duration-200
+                                duration-150
+                                cursor-pointer
                             "
                         >
-                            <div className="mb-4">
-                                <h3 className="text-base font-semibold text-text-main flex items-center justify-between">
-                                    <span>{cat.title}</span>
-                                    <span className="text-[11px] font-mono text-accent">0{idx + 1}</span>
-                                </h3>
-                                <p className="text-xs text-text-muted mt-1">
-                                    {cat.description}
-                                </p>
-                            </div>
-
-                            <div className="grid grid-cols-2 gap-2.5 pt-2 border-t border-border/60">
-                                {cat.skills.map((skill) => {
-                                    const Icon = skill.icon;
-                                    return (
-                                        <div
-                                            key={skill.name}
-                                            className="
-                                                group
-                                                flex items-center gap-2.5
-                                                p-2.5
-                                                rounded-[8px]
-                                                bg-bg
-                                                border border-border
-                                                hover:border-accent
-                                                hover:bg-surface-2
-                                                transition-all
-                                                duration-150
-                                            "
-                                        >
-                                            <div className="w-6 h-6 rounded-[5px] bg-surface flex items-center justify-center text-text-muted group-hover:text-accent transition-colors shrink-0">
-                                                <Icon size={14} />
-                                            </div>
-                                            <div className="min-w-0">
-                                                <div className="text-xs font-medium text-text-main group-hover:text-accent transition-colors truncate">
-                                                    {skill.name}
-                                                </div>
-                                                <div className="text-[10px] font-mono text-text-faint truncate">
-                                                    {skill.level}
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    ))}
+                            <Layers size={12} className="text-accent" />
+                            <span>View full technology specification</span>
+                            <ArrowUpRight size={12} className="text-text-faint" />
+                        </a>
+                    </div>
                 </div>
             </ScrollReveal>
         </section>

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { FaGithub, FaFacebook } from "react-icons/fa";
 import { ArrowUpRight } from "lucide-react";
 import { useAnimationsEnabled } from "../lib/motion";
+import { animate, createTimeline, stagger, scrambleText } from "../lib/anime";
 
 const ORIGINAL_TITLE = "Hi, I'm Jerwin Nico";
 const ASCII_CHARS = "!<>-_\\/[]{}—=+*^?#________0101";
@@ -13,6 +14,10 @@ const ROLES = [
 
 const Hero = () => {
     const animationsEnabled = useAnimationsEnabled();
+    const containerRef = useRef(null);
+    const titleRef = useRef(null);
+    const scrambleAnimRef = useRef(null);
+
     const tech_stacks = ["Django", "DRF", "Python", "PostgreSQL", "React"];
 
     const social_links = [
@@ -43,49 +48,64 @@ const Hero = () => {
         }
     };
 
-    // ASCII Scrambler on hover
-    const [titleText, setTitleText] = useState(ORIGINAL_TITLE);
-    const scrambleIntervalRef = useRef(null);
+    // Anime.js Entrance timeline
+    useEffect(() => {
+        if (!containerRef.current) return;
 
-    const handleTitleMouseEnter = () => {
-        if (!animationsEnabled) return;
+        const targets = containerRef.current.querySelectorAll(".hero-anim-item");
+        if (!targets.length) return;
 
-        let iteration = 0;
-        const totalIterations = ORIGINAL_TITLE.length;
-
-        if (scrambleIntervalRef.current) {
-            clearInterval(scrambleIntervalRef.current);
+        if (!animationsEnabled) {
+            targets.forEach((el) => {
+                el.style.opacity = "1";
+                el.style.transform = "none";
+            });
+            return;
         }
 
-        scrambleIntervalRef.current = setInterval(() => {
-            setTitleText(
-                ORIGINAL_TITLE.split("")
-                    .map((char, index) => {
-                        if (char === " " || char === "'") return char;
-                        if (index < iteration) {
-                            return ORIGINAL_TITLE[index];
-                        }
-                        return ASCII_CHARS[Math.floor(Math.random() * ASCII_CHARS.length)];
-                    })
-                    .join("")
-            );
+        const tl = createTimeline({
+            defaults: {
+                ease: "outCubic",
+                duration: 650,
+            },
+        });
 
-            if (iteration >= totalIterations) {
-                clearInterval(scrambleIntervalRef.current);
-                scrambleIntervalRef.current = null;
-                setTitleText(ORIGINAL_TITLE);
-            }
+        tl.add(targets, {
+            opacity: [0, 1],
+            translateY: [16, 0],
+            delay: stagger(80, { start: 60 }),
+        });
 
-            iteration += 1 / 2;
-        }, 30);
+        return () => {
+            tl.pause?.();
+        };
+    }, [animationsEnabled]);
+
+    // Anime.js ASCII Scramble on hover
+    const handleTitleMouseEnter = () => {
+        if (!animationsEnabled || !titleRef.current) return;
+
+        if (scrambleAnimRef.current) {
+            scrambleAnimRef.current.pause?.();
+        }
+
+        scrambleAnimRef.current = animate(titleRef.current, {
+            textContent: scrambleText(ORIGINAL_TITLE, {
+                characters: ASCII_CHARS,
+                duration: 650,
+                from: "random",
+            }),
+        });
     };
 
     const handleTitleMouseLeave = () => {
-        if (scrambleIntervalRef.current) {
-            clearInterval(scrambleIntervalRef.current);
-            scrambleIntervalRef.current = null;
+        if (scrambleAnimRef.current) {
+            scrambleAnimRef.current.pause?.();
+            scrambleAnimRef.current = null;
         }
-        setTitleText(ORIGINAL_TITLE);
+        if (titleRef.current) {
+            titleRef.current.textContent = ORIGINAL_TITLE;
+        }
     };
 
     // Typewriter effect for Roles
@@ -107,7 +127,6 @@ const Hero = () => {
                 if (displayedRole.length < fullRole.length) {
                     setDisplayedRole(fullRole.slice(0, displayedRole.length + 1));
                 } else {
-                    // Pause when word is completely typed
                     setTimeout(() => setIsDeleting(true), 2000);
                 }
             } else {
@@ -123,31 +142,28 @@ const Hero = () => {
         return () => clearTimeout(timer);
     }, [displayedRole, isDeleting, currentRoleIndex, animationsEnabled]);
 
-    useEffect(() => {
-        return () => {
-            if (scrambleIntervalRef.current) {
-                clearInterval(scrambleIntervalRef.current);
-            }
-        };
-    }, []);
-
     return (
-        <section id="home" className="max-w-[1080px] mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24">
+        <section
+            ref={containerRef}
+            id="home"
+            className="max-w-[1080px] mx-auto px-6 pt-24 pb-16 md:pt-32 md:pb-24"
+        >
             <div className="max-w-3xl">
-                {/* H1 Title with ASCII scramble on hover */}
+                {/* H1 Title with Anime.js ASCII scramble on hover */}
                 <h1
+                    ref={titleRef}
                     onMouseEnter={handleTitleMouseEnter}
                     onMouseLeave={handleTitleMouseLeave}
-                    className="animate-fade-up text-4xl sm:text-5xl md:text-6xl font-semibold tracking-[-0.03em] text-text-main leading-[1.08] mb-3 cursor-default select-none font-sans"
-                    style={{ animationDelay: "60ms" }}
+                    className="hero-anim-item text-4xl sm:text-5xl md:text-6xl font-semibold tracking-[-0.03em] text-text-main leading-[1.08] mb-3 cursor-default select-none font-sans"
+                    style={{ opacity: 0, transform: "translateY(16px)" }}
                 >
-                    {titleText}
+                    {ORIGINAL_TITLE}
                 </h1>
 
                 {/* Role with Typewriter effect */}
                 <p
-                    className="animate-fade-up text-xl md:text-2xl text-text-muted font-normal mb-6 min-h-[1.75em] flex items-center font-mono"
-                    style={{ animationDelay: "120ms" }}
+                    className="hero-anim-item text-xl md:text-2xl text-text-muted font-normal mb-6 min-h-[1.75em] flex items-center font-mono"
+                    style={{ opacity: 0, transform: "translateY(16px)" }}
                 >
                     <span>{displayedRole}</span>
                     <span
@@ -158,8 +174,8 @@ const Hero = () => {
 
                 {/* About description */}
                 <p
-                    className="animate-fade-up text-base md:text-lg text-text-muted leading-relaxed max-w-[62ch] mb-6"
-                    style={{ animationDelay: "180ms" }}
+                    className="hero-anim-item text-base md:text-lg text-text-muted leading-relaxed max-w-[62ch] mb-6"
+                    style={{ opacity: 0, transform: "translateY(16px)" }}
                 >
                     I build secure and scalable web applications using Django, Django REST Framework,
                     PostgreSQL, and React. Currently pursuing a BSIT degree while developing
@@ -168,8 +184,8 @@ const Hero = () => {
 
                 {/* Interactive Tech Stack Tags */}
                 <div
-                    className="animate-fade-up flex flex-wrap items-center gap-2 mb-8"
-                    style={{ animationDelay: "240ms" }}
+                    className="hero-anim-item flex flex-wrap items-center gap-2 mb-8"
+                    style={{ opacity: 0, transform: "translateY(16px)" }}
                     aria-label="Core technologies"
                 >
                     {tech_stacks.map((tech) => (
@@ -199,8 +215,8 @@ const Hero = () => {
 
                 {/* Actions & Social Links */}
                 <div
-                    className="animate-fade-up flex flex-wrap items-center gap-4 pt-1"
-                    style={{ animationDelay: "300ms" }}
+                    className="hero-anim-item flex flex-wrap items-center gap-4 pt-1"
+                    style={{ opacity: 0, transform: "translateY(16px)" }}
                 >
                     <a
                         href="#projects"

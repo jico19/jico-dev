@@ -1,31 +1,7 @@
 import ScrollReveal from "./ScrollReveal";
 import AsciiPortrait from "./AsciiPortrait";
-import { Terminal, Code2, Server, Database } from "lucide-react";
 
 const About = () => {
-    const highlights = [
-        {
-            icon: Server,
-            title: "AI-Driven Development",
-            desc: "Leveraging AI tools to accelerate development, explore solutions, and turn ideas into functional, production-ready applications.",
-        },
-        {
-            icon: Database,
-            title: "Backend & System Architecture",
-            desc: "Building reliable REST APIs, structured database schemas, and secure backend systems using Django REST Framework, FastAPI, and PostgreSQL.",
-        },
-        {
-            icon: Code2,
-            title: "Full-Stack Engineering",
-            desc: "Developing end-to-end applications by integrating robust backend services with modern React interfaces and intuitive user experiences.",
-        },
-        {
-            icon: Terminal,
-            title: "Continuous Experimentation",
-            desc: "Exploring emerging AI technologies, developer tools, and modern workflows to build software more efficiently and solve real-world problems.",
-        },
-    ];
-
     return (
         <section id="about" aria-labelledby="about-heading" className="max-w-[1080px] mx-auto px-6 py-16 md:py-24">
             <ScrollReveal>
@@ -67,8 +43,8 @@ const About = () => {
                         </div>
                     </div>
 
-                    {/* Right Column: Bio Narrative & Focus Highlights */}
-                    <div className="lg:col-span-8 space-y-6">
+                    {/* Right Column: Bio Narrative */}
+                    <div className="lg:col-span-8 flex flex-col justify-center">
                         <div className="space-y-4 text-sm sm:text-base text-text-muted leading-relaxed">
                             <p>
                                 Hello! I'm <span className="text-text-main font-medium">Jerwin Nico Quijano</span>, a full-stack developer based in the Philippines focused on AI-driven development and building practical, scalable web applications.
@@ -79,31 +55,6 @@ const About = () => {
                             <p>
                                 Beyond traditional development, I'm exploring how AI can improve the way software is designed, built, and delivered. I enjoy experimenting with new tools, integrating intelligent features into applications, and finding more effective ways to turn complex requirements into reliable software.
                             </p>
-                        </div>
-
-                        {/* Skill / Focus Highlights in 2x2 Grid */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                            {highlights.map((item, idx) => {
-                                const Icon = item.icon;
-                                return (
-                                    <div
-                                        key={idx}
-                                        className="p-4 rounded-[10px] border border-border bg-surface hover:border-text-faint/60 transition-colors"
-                                    >
-                                        <div className="flex items-center gap-2.5 mb-1.5">
-                                            <div className="w-7 h-7 rounded-[6px] bg-bg border border-border flex items-center justify-center text-accent">
-                                                <Icon size={14} />
-                                            </div>
-                                            <h3 className="text-sm font-semibold text-text-main">
-                                                {item.title}
-                                            </h3>
-                                        </div>
-                                        <p className="text-xs text-text-muted leading-relaxed pl-9.5">
-                                            {item.desc}
-                                        </p>
-                                    </div>
-                                );
-                            })}
                         </div>
                     </div>
                 </div>

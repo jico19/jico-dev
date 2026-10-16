@@ -25,7 +25,7 @@ const Testimonials = () => {
                 {/* Section Header */}
                 <div className="mb-10">
                     <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        05 / Testimonials
+                        06 / Testimonials
                     </span>
                     <h2 id="testimonials-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Testimonials

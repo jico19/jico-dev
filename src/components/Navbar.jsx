@@ -15,6 +15,7 @@ const Navbar = () => {
     const navItems = [
         { label: "About", href: "#about", id: "about" },
         { label: "Stack", href: "#skills", id: "skills" },
+        { label: "Services", href: "#services", id: "services" },
         { label: "Projects", href: "#projects", id: "projects" },
         { label: "Experience", href: "#experience", id: "experience" },
         { label: "Testimonials", href: "#testimonials", id: "testimonials" },
@@ -44,7 +45,7 @@ const Navbar = () => {
             threshold: 0,
         };
 
-        const observedIds = ["home", "about", "skills", "projects", "experience", "testimonials", "contact"];
+        const observedIds = ["home", "about", "skills", "services", "projects", "experience", "testimonials", "contact"];
         const observerCallback = (entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting) {

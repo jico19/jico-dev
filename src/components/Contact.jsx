@@ -77,7 +77,7 @@ const Contact = () => {
                 {/* Section Header */}
                 <div className="mb-10">
                     <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        06 / Contact
+                        07 / Contact
                     </span>
                     <h2 id="contact-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Contact

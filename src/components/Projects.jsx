@@ -1,85 +1,11 @@
 import { useState } from "react";
-import farmPass from "../assets/projects/farmpass.jpeg";
-import { ArrowUpRight, Terminal, Image as ImageIcon, Braces, Sparkles, Ghost } from "lucide-react";
+import { ArrowUpRight, ArrowRight, Ghost, Terminal } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
+import { PROJECT_DATA } from "../data/projectsData";
+import { navigate } from "../lib/router";
 
 const Projects = () => {
     const [mousePos, setMousePos] = useState({ x: -1000, y: -1000 });
-    // Tab state per project index: "preview" | "api" | "deploy"
-    const [activeTabs, setActiveTabs] = useState({ 0: "preview" });
-
-    const project_data = [
-        {
-            label: "FarmPass",
-            slug: "farmpass",
-            path: "~/projects/farmpass",
-            image: farmPass,
-            badge: "Municipal GIS & Biosecurity",
-            status: "Ongoing",
-            coordinates: "LAT: 13.96° N / LON: 121.52° E",
-            tech: ["Django", "DRF", "React 19", "PostgreSQL", "PayMongo"],
-            description:
-                "A full-stack municipal platform digitizing livestock transport permits and African Swine Fever (ASF) monitoring, featuring OCR validation, QR checkpoint verification, and GIS zoning maps.",
-            web_link: "https://farmpass-ph.me/",
-            api_data: {
-                system: "FarmPass Biosecurity & Permitting",
-                client: "MAO Sariaya",
-                status: "200 OK [Ongoing]",
-                backend: "Django REST Framework 3.14",
-                database: "PostgreSQL + PostGIS",
-                frontend: "React 19 + Tailwind",
-                modules: [
-                    "African Swine Fever (ASF) zoning & GIS",
-                    "OCR document validation & QR checkpoints",
-                    "Permit pipeline & PayMongo integration",
-                    "SMS notification & verification workflows",
-                ],
-            },
-            logs: [
-                "$ jico run --target farmpass.service",
-                "[08:12:01] Spatial GeoDjango engine: [OK]",
-                "[08:12:02] PostgreSQL pool: [ESTABLISHED]",
-                "[08:12:03] Binding REST /api/v1/permits: [ONLINE]",
-                "[08:12:04] 412 agricultural parcels verified",
-                "$ curl -I https://farmpass-ph.me/ -> 200 OK",
-            ],
-        },
-        {
-            label: "Healthcare SaaS Platform",
-            slug: "st-business-consulting",
-            path: "~/projects/st-business-consulting",
-            image: null,
-            badge: "Multi-Tenant Healthcare SaaS",
-            status: "Ongoing",
-            coordinates: "US: FL / IN / GA [MULTI-TENANT]",
-            tech: ["FastAPI", "React 19", "Supabase", "PostgreSQL", "Tailwind CSS"],
-            description:
-                "A multi-tenant healthcare SaaS platform built for ST Business Consulting, featuring state-scoped authorization across Florida, Indiana, and Georgia, cryptographic e-signatures, tamper-resistant audit logs, caregiver onboarding, and automated scheduling workflows.",
-            web_link: null,
-            api_data: {
-                system: "Healthcare SaaS Multi-Tenant Platform",
-                client: "ST Business Consulting",
-                status: "200 OK [Ongoing]",
-                backend: "FastAPI + Domain Services",
-                database: "Supabase + PostgreSQL",
-                frontend: "React 19 + Tailwind",
-                modules: [
-                    "Multi-tenant state data isolation (FL, IN, GA)",
-                    "Cryptographic e-signatures & audit logs",
-                    "Caregiver onboarding & credential tracking",
-                    "Client intake, care plans & scheduling",
-                ],
-            },
-            logs: [
-                "$ jico run --target healthcare-saas.service",
-                "[09:30:01] FastAPI domain services: [READY]",
-                "[09:30:02] Supabase PostgREST pool: [CONNECTED]",
-                "[09:30:03] State isolation policy (FL, IN, GA): [ENFORCED]",
-                "[09:30:04] Automated test suite: 235 tests passing [OK]",
-                "$ curl -I https://internal.stbc.health/healthz -> 200 OK",
-            ],
-        },
-    ];
 
     const handleMouseMove = (e) => {
         const rect = e.currentTarget.getBoundingClientRect();
@@ -90,37 +16,47 @@ const Projects = () => {
         setMousePos({ x: -1000, y: -1000 });
     };
 
-    const handleTabChange = (projIdx, tabKey) => {
-        setActiveTabs((prev) => ({
-            ...prev,
-            [projIdx]: tabKey,
-        }));
-    };
-
     return (
         <section id="projects" aria-labelledby="projects-heading" className="max-w-[1080px] mx-auto px-6 py-16 md:py-24">
             <ScrollReveal>
                 {/* Section Header */}
-                <div className="mb-8 md:mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        03 / Projects
-                    </span>
-                    <h2 id="projects-heading" className="text-3xl font-semibold tracking-tight text-text-main">
-                        Projects
-                    </h2>
-                    <p className="mt-2 text-sm text-text-muted max-w-[60ch]">
-                        Applications, APIs, and systems I've built.
-                    </p>
+                <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
+                    <div>
+                        <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
+                            04 / Projects
+                        </span>
+                        <h2 id="projects-heading" className="text-3xl font-semibold tracking-tight text-text-main">
+                            Featured Projects
+                        </h2>
+                        <p className="mt-2 text-sm text-text-muted max-w-[56ch]">
+                            Production web applications, REST APIs, and municipal systems I've built.
+                        </p>
+                    </div>
+
+                    <a
+                        href="/projects"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate("/projects");
+                        }}
+                        className="
+                            inline-flex items-center gap-1.5
+                            text-xs font-mono text-accent
+                            hover:underline
+                            cursor-pointer
+                            shrink-0
+                        "
+                    >
+                        <span>View case studies</span>
+                        <ArrowRight size={13} />
+                    </a>
                 </div>
 
-                {/* Project List */}
-                <div className="space-y-8">
-                    {project_data.map((item, idx) => {
-                        const currentTab = activeTabs[idx] || "preview";
-
-                        return (
+                {/* Skimmed Project Cards */}
+                <div className="space-y-6">
+                    {PROJECT_DATA.map((item, idx) => (
+                        <ScrollReveal key={idx} delay={idx * 120}>
                             <article
-                                key={idx}
                                 onMouseMove={handleMouseMove}
                                 onMouseLeave={handleMouseLeave}
                                 className="
@@ -145,277 +81,142 @@ const Projects = () => {
                                     }}
                                 />
 
-                                {/* Compact Terminal Window Header */}
-                                <div className="relative z-10 px-3.5 py-2.5 border-b border-border bg-bg/90 backdrop-blur-xs flex items-center justify-between gap-2">
-                                    {/* Left: Traffic Lights & Path */}
-                                    <div className="flex items-center gap-2.5 min-w-0">
-                                        <div className="flex items-center gap-1.5 shrink-0" aria-hidden="true">
-                                            <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F56]/80" />
-                                            <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]/80" />
-                                            <span className="w-2.5 h-2.5 rounded-full bg-[#27C93F]/80" />
-                                        </div>
-                                        <div className="flex items-center gap-1.5 text-xs font-mono text-text-faint truncate">
-                                            <span className="hidden sm:inline text-accent shrink-0">jico@dev:</span>
-                                            <span className="truncate">{item.path}</span>
-                                        </div>
+                                {/* Card Header Bar */}
+                                <div className="relative z-10 px-4 py-2 border-b border-border bg-bg/90 backdrop-blur-xs flex items-center justify-between text-xs font-mono text-text-faint">
+                                    <div className="flex items-center gap-2">
+                                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                        <span className="text-text-muted">{item.category || item.badge}</span>
                                     </div>
-
-                                    {/* Right: Mobile-Compact Tabs */}
-                                    <div className="flex items-center gap-0.5 bg-surface-2 p-0.5 rounded-[6px] border border-border shrink-0">
-                                        <button
-                                            type="button"
-                                            onClick={() => handleTabChange(idx, "preview")}
-                                            className={`
-                                                flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-mono transition-all duration-150 cursor-pointer
-                                                ${currentTab === "preview"
-                                                    ? "bg-bg text-text-main font-medium border border-border/80 shadow-xs"
-                                                    : "text-text-muted hover:text-text-main"}
-                                            `}
-                                        >
-                                            <ImageIcon size={11} className={currentTab === "preview" ? "text-accent" : ""} />
-                                            <span>preview</span>
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => handleTabChange(idx, "api")}
-                                            className={`
-                                                flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-mono transition-all duration-150 cursor-pointer
-                                                ${currentTab === "api"
-                                                    ? "bg-bg text-text-main font-medium border border-border/80 shadow-xs"
-                                                    : "text-text-muted hover:text-text-main"}
-                                            `}
-                                        >
-                                            <Braces size={11} className={currentTab === "api" ? "text-accent" : ""} />
-                                            <span>api</span>
-                                        </button>
-
-                                        <button
-                                            type="button"
-                                            onClick={() => handleTabChange(idx, "deploy")}
-                                            className={`
-                                                flex items-center gap-1 px-2 py-0.5 rounded-[4px] text-[11px] font-mono transition-all duration-150 cursor-pointer
-                                                ${currentTab === "deploy"
-                                                    ? "bg-bg text-text-main font-medium border border-border/80 shadow-xs"
-                                                    : "text-text-muted hover:text-text-main"}
-                                            `}
-                                        >
-                                            <Terminal size={11} className={currentTab === "deploy" ? "text-accent" : ""} />
-                                            <span>logs</span>
-                                        </button>
-                                    </div>
+                                    <span className="text-[11px] text-text-faint">
+                                        {item.client}
+                                    </span>
                                 </div>
 
-                                {/* Desktop Split-Pane / Mobile Stacked Body */}
-                                <div className="relative z-10 p-3.5 sm:p-5 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-center">
-
-                                    {/* Left: Viewport Pane (lg:col-span-7) */}
-                                    <div className="lg:col-span-7">
-                                        <div className="relative w-full aspect-[16/10] max-h-[210px] sm:max-h-[260px] lg:max-h-[290px] rounded-[8px] overflow-hidden border border-border bg-bg shadow-inner flex flex-col justify-center">
-
-                                            {/* TAB 1: GUI Preview Viewport */}
-                                            {currentTab === "preview" && (
-                                                <div className="relative w-full h-full group/preview overflow-hidden bg-[#0A0A0B] flex items-center justify-center">
-                                                    {item.image ? (
-                                                        <img
-                                                            src={item.image}
-                                                            alt={`${item.label} project screenshot`}
-                                                            className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover/preview:scale-[1.02]"
-                                                        />
-                                                    ) : (
-                                                        <div className="flex flex-col items-center justify-center gap-2.5 p-6 text-center select-none">
-                                                            <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-surface-2 border border-border text-accent shadow-xs">
-                                                                <Ghost size={24} className="animate-pulse" />
-                                                                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent animate-ping" />
-                                                                <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-accent" />
-                                                            </div>
-                                                            <div className="space-y-0.5">
-                                                                <div className="text-xs font-mono font-medium text-text-main tracking-wider uppercase">
-                                                                    Coming Soon...
-                                                                </div>
-                                                                <div className="text-[10px] font-mono text-text-faint">
-                                                                    // preview under development
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-
-                                                    {/* Desktop Corner Coordinates */}
-                                                    <div className="hidden sm:block absolute top-2 left-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-text-faint pointer-events-none">
-                                                        {item.image ? "[+] 1920x1080" : "[+] PLACEHOLDER"}
+                                {/* Skimmed Content Body */}
+                                <div className="relative z-10 p-5 sm:p-6 grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-center">
+                                    {/* Visual Thumbnail (lg:col-span-5) */}
+                                    <div className="lg:col-span-5">
+                                        <div className="relative w-full aspect-[16/10] max-h-[190px] sm:max-h-[220px] rounded-[8px] overflow-hidden border border-border bg-[#0A0A0B] flex items-center justify-center">
+                                            {item.image ? (
+                                                <img
+                                                    src={item.image}
+                                                    alt={`${item.label} screenshot`}
+                                                    className="w-full h-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.03]"
+                                                />
+                                            ) : (
+                                                <div className="flex flex-col items-center justify-center gap-2 p-4 text-center select-none">
+                                                    <div className="flex items-center justify-center w-10 h-10 rounded-full bg-surface-2 border border-border text-accent">
+                                                        <Ghost size={20} className="animate-pulse" />
                                                     </div>
-                                                    <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-accent pointer-events-none flex items-center gap-1">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                                        <span>{item.status ? item.status.toUpperCase() : "LIVE"}</span>
-                                                    </div>
-                                                    <div className="hidden sm:block absolute bottom-2 left-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-text-faint pointer-events-none">
-                                                        {item.coordinates || "LAT: 13.96° N / LON: 121.52° E"}
+                                                    <div className="text-[10px] font-mono text-text-faint">
+                                                        // private healthcare portal
                                                     </div>
                                                 </div>
                                             )}
 
-                                            {/* TAB 2: API Specification (Compact JSON) */}
-                                            {currentTab === "api" && (
-                                                <div className="w-full h-full p-3 sm:p-4 overflow-y-auto font-mono text-[10px] sm:text-[11px] bg-surface leading-tight flex flex-col">
-                                                    <div className="text-text-faint mb-1.5 pb-1 border-b border-border flex items-center justify-between text-[10px]">
-                                                        <span>// GET /api/v1/specs</span>
-                                                        <span className="text-accent">200 OK</span>
-                                                    </div>
-                                                    <pre className="text-text-muted overflow-x-auto whitespace-pre leading-relaxed">
-                                                        <code>
-{`{
-  `}<span className="text-accent">"system"</span>{`: `}<span className="text-text-main">"{item.api_data.system}"</span>{`,
-  `}<span className="text-accent">"status"</span>{`: `}<span className="text-accent">"{item.api_data.status}"</span>{`,
-  `}<span className="text-accent">"backend"</span>{`: `}<span className="text-text-main">"{item.api_data.backend}"</span>{`,
-  `}<span className="text-accent">"database"</span>{`: `}<span className="text-text-main">"{item.api_data.database}"</span>{`,
-  `}<span className="text-accent">"modules"</span>{`: [
-`}{item.api_data.modules.map((m, mIdx) => `    "${m}"${mIdx < item.api_data.modules.length - 1 ? "," : ""}`).join("\n")}{`
-  ]
-}`}
-                                                        </code>
-                                                    </pre>
-                                                </div>
-                                            )}
-
-                                            {/* TAB 3: CLI Deployment Logs */}
-                                            {currentTab === "deploy" && (
-                                                <div className="w-full h-full p-3 sm:p-4 overflow-y-auto font-mono text-[10px] sm:text-[11px] bg-[#0A0A0B] text-[#EDEDEF] leading-relaxed flex flex-col">
-                                                    <div className="text-text-faint mb-2 pb-1 border-b border-border/60 flex items-center justify-between text-[10px]">
-                                                        <span className="flex items-center gap-1 text-accent">
-                                                            <Sparkles size={10} />
-                                                            <span>pipeline.log</span>
-                                                        </span>
-                                                        <span className="text-text-faint">UTC+8</span>
-                                                    </div>
-
-                                                    <div className="space-y-1">
-                                                        {item.logs.map((line, logIdx) => (
-                                                            <div
-                                                                key={logIdx}
-                                                                className={
-                                                                    line.startsWith("$")
-                                                                        ? "text-accent font-semibold"
-                                                                        : line.includes("[OK]") || line.includes("200 OK")
-                                                                        ? "text-text-muted"
-                                                                        : "text-text-faint"
-                                                                }
-                                                            >
-                                                                {line}
-                                                            </div>
-                                                        ))}
-                                                        <div className="flex items-center gap-1 pt-1 text-accent">
-                                                            <span>$</span>
-                                                            <span className="inline-block w-1.5 h-3 bg-accent animate-pulse" />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            )}
+                                            <div className="absolute top-2 right-2 px-1.5 py-0.5 rounded-[4px] bg-bg/90 backdrop-blur-xs border border-border text-[9px] font-mono text-accent flex items-center gap-1">
+                                                <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
+                                                <span>{item.status}</span>
+                                            </div>
                                         </div>
                                     </div>
 
-                                    {/* Right: Project Information Pane (lg:col-span-5) */}
-                                    <div className="lg:col-span-5 flex flex-col justify-center space-y-3">
+                                    {/* Skimmed Info & Actions (lg:col-span-7) */}
+                                    <div className="lg:col-span-7 flex flex-col justify-between space-y-3">
                                         <div>
-                                            <div className="flex flex-wrap items-center gap-2 mb-1">
-                                                <span className="px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-[10px] font-mono text-accent">
-                                                    {item.badge}
-                                                </span>
-                                                {item.status && (
-                                                    <span className="px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-[10px] font-mono text-text-muted flex items-center gap-1">
-                                                        <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                                        <span>{item.status}</span>
-                                                    </span>
-                                                )}
-                                            </div>
-                                            <h3 className="text-lg sm:text-xl font-semibold text-text-main">
+                                            <span className="text-[11px] font-mono text-text-faint block mb-1">
+                                                {item.badge}
+                                            </span>
+                                            <h3 className="text-xl font-semibold text-text-main group-hover:text-accent transition-colors">
                                                 {item.label}
                                             </h3>
+                                            <p className="mt-1.5 text-xs sm:text-sm text-text-muted leading-relaxed">
+                                                {item.shortDescription}
+                                            </p>
                                         </div>
 
-                                        <p className="text-xs sm:text-sm leading-relaxed text-text-muted">
-                                            {item.description}
-                                        </p>
-
-                                        {/* Tech Tags */}
-                                        <div className="flex flex-wrap gap-1.5 pt-0.5" aria-label="Technologies used">
-                                            {item.tech.map((tech, techIdx) => (
+                                        {/* Core Tech Chips */}
+                                        <div className="flex flex-wrap gap-1.5 pt-1">
+                                            {item.tech.map((t) => (
                                                 <span
-                                                    key={techIdx}
-                                                    className="
-                                                        px-2 py-0.5
-                                                        rounded-[5px]
-                                                        border border-border
-                                                        bg-bg
-                                                        text-[11px]
-                                                        font-mono
-                                                        text-text-muted
-                                                        hover:border-accent/40
-                                                        hover:text-text-main
-                                                        transition-colors
-                                                        cursor-default
-                                                    "
+                                                    key={t}
+                                                    className="px-2 py-0.5 rounded-[4px] bg-surface-2 border border-border text-[10px] font-mono text-text-muted"
                                                 >
-                                                    {tech}
+                                                    {t}
                                                 </span>
                                             ))}
                                         </div>
 
-                                        {/* Action Button */}
-                                        <div className="pt-2">
-                                            {item.web_link ? (
+                                        {/* Action Buttons */}
+                                        <div className="flex flex-wrap items-center gap-2.5 pt-2">
+                                            <a
+                                                href="/projects"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    navigate("/projects");
+                                                }}
+                                                className="
+                                                    h-8 px-3.5
+                                                    rounded-[6px]
+                                                    bg-surface-2
+                                                    hover:bg-surface
+                                                    border border-border
+                                                    hover:border-accent/50
+                                                    text-xs font-mono text-text-main
+                                                    inline-flex items-center gap-1.5
+                                                    transition-all
+                                                    duration-150
+                                                    cursor-pointer
+                                                "
+                                            >
+                                                <span>View specifications</span>
+                                                <ArrowRight size={12} className="text-accent" />
+                                            </a>
+
+                                            {item.web_link && (
                                                 <a
                                                     href={item.web_link}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
                                                     className="
-                                                        group/btn
-                                                        inline-flex items-center justify-center gap-1.5
-                                                        w-full sm:w-auto
-                                                        px-3.5 py-1.5
+                                                        h-8 px-3.5
                                                         rounded-[6px]
-                                                        border border-accent/40
-                                                        bg-accent/10
-                                                        text-xs font-mono font-medium text-text-main
-                                                        hover:border-accent
-                                                        hover:bg-accent
-                                                        hover:text-accent-contrast
-                                                        hover:-translate-y-0.5
-                                                        active:translate-y-0
-                                                        active:scale-[0.98]
+                                                        bg-accent
+                                                        text-accent-contrast
+                                                        text-xs font-medium
+                                                        inline-flex items-center gap-1.5
+                                                        hover:brightness-95
                                                         transition-all
                                                         duration-150
+                                                        cursor-pointer
                                                     "
                                                 >
-                                                    <span>$ open live_site</span>
-                                                    <ArrowUpRight
-                                                        size={13}
-                                                        className="group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform duration-150"
-                                                    />
+                                                    <span>Live platform</span>
+                                                    <ArrowUpRight size={12} />
                                                 </a>
-                                            ) : (
-                                                <div
-                                                    className="
-                                                        inline-flex items-center justify-center gap-1.5
-                                                        w-full sm:w-auto
-                                                        px-3.5 py-1.5
-                                                        rounded-[6px]
-                                                        border border-border
-                                                        bg-surface-2
-                                                        text-xs font-mono text-text-muted
-                                                        cursor-default
-                                                    "
-                                                >
-                                                    <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
-                                                    <span>$ status: ongoing_development</span>
-                                                </div>
                                             )}
                                         </div>
                                     </div>
-
                                 </div>
                             </article>
-                        );
-                    })}
+                        </ScrollReveal>
+                    ))}
+                </div>
+
+                {/* Section Footer: Link to Full Projects Page */}
+                <div className="mt-8 pt-4 border-t border-border/60 flex items-center justify-between text-xs font-mono text-text-faint">
+                    <span>Detailed technical case studies & architecture deep dives</span>
+                    <a
+                        href="/projects"
+                        onClick={(e) => {
+                            e.preventDefault();
+                            navigate("/projects");
+                        }}
+                        className="text-accent hover:underline flex items-center gap-1"
+                    >
+                        <span>Explore full case studies</span>
+                        <ArrowRight size={12} />
+                    </a>
                 </div>
             </ScrollReveal>
         </section>
