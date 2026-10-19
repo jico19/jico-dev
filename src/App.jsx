@@ -14,7 +14,7 @@ import ScrollTelemetry from "./components/ScrollTelemetry"
 import TechPage from "./pages/TechPage"
 import ProjectsPage from "./pages/ProjectsPage"
 import { useCurrentPath } from "./lib/router"
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/react"
 
 function App() {
   const [currentPath] = useCurrentPath()
