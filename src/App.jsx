@@ -14,6 +14,7 @@ import ScrollTelemetry from "./components/ScrollTelemetry"
 import TechPage from "./pages/TechPage"
 import ProjectsPage from "./pages/ProjectsPage"
 import { useCurrentPath } from "./lib/router"
+import { Analytics } from "@vercel/analytics/next"
 
 function App() {
   const [currentPath] = useCurrentPath()
@@ -42,6 +43,7 @@ function App() {
     <div className="min-h-screen bg-bg text-text-main selection:bg-accent selection:text-accent-contrast relative">
       <AsciiParticles />
       <CustomCursor />
+      <Analytics/>
       <Navbar />
       <main>
         <Hero />
