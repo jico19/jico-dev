@@ -16,22 +16,28 @@ export const PROJECT_DATA = [
         image: farmPass,
         web_link: "https://farmpass-ph.me/",
         tech: [
-            "Django",
-            "Django REST Framework",
+            "React 19.2.4",
+            "Vite 8.0.7",
+            "Tailwind CSS 4.2.2",
+            "daisyUI 5.5.19",
+            "TanStack Query 5.96.2",
+            "Zustand 5.0.12",
+            "Django 6.0.3",
+            "Django REST Framework 3.17.1",
             "PostgreSQL",
-            "PostGIS",
-            "React 19",
-            "PayMongo API",
-            "Tailwind CSS",
+            "MapLibre GL 5.22.0",
+            "html5-qrcode 2.3.8",
+            "ReportLab 4.4.10",
+            "django-tasks 0.12.0"
         ],
         shortDescription:
-            "A municipal platform digitizing swine transport permits and biosecurity tracking with GIS zoning, OCR validation, and QR checkpoints.",
+            "A livestock transport permit system where farmers apply online, staff review documents, and inspectors check permits by scanning a QR code.",
         fullDescription:
-            "A mission-critical municipal platform built for the Municipality of Sariaya to digitize livestock transport permits and curb African Swine Fever (ASF) transmission. It replaces a paper-heavy 3-day manual approval workflow with an automated geospatial verification pipeline, instant PayMongo fee checkout, OCR document scanning, and offline-resilient QR checkpoints for field officers.",
+            "FarmPass follows a livestock transport permit from application to checkpoint inspection. Farmers submit their documents online, municipal agriculture staff and provincial veterinarians review the request, and inspectors scan the permit's QR code to look up the transport details. Barangay staff also record hog counts, which appear on a shared map.",
         challenge:
-            "Municipal agricultural officers previously relied on paper documents that took 48-72 hours to verify. During African Swine Fever outbreaks, manual paper permits created severe biosecurity blind spots, lacked real-time spatial parcel quarantine validation, and offered zero auditability for checkpoint inspectors on highways.",
+            "A permit passes through several people before livestock can travel. Each reviewer needs the supporting documents and previous decisions, while checkpoint inspectors need a way to check the permit. The system has to keep those steps connected and control who can approve each one.",
         solution:
-            "Engineered an automated geospatial permit pipeline with PostGIS boundary checks, instant digital fee settlement via PayMongo, tamper-evident cryptographic QR issuance, and mobile verification tooling for field officers.",
+            "Each application keeps its documents, review results, and permit details together. Staff work through defined approval stages, with OCR results available to help check uploaded documents. Generated permits include a QR link to the record inspectors use at checkpoints.",
         metrics: [
             {
                 label: "Approval Latency",
@@ -55,36 +61,32 @@ export const PROJECT_DATA = [
             },
         ],
         architecture: {
-            clientTier:
-                "React 19 SPA + Tailwind CSS with responsive GIS map layers and offline-cached QR validation.",
-            apiTier:
-                "Django REST Framework 3.14 with transactional permit pipelines and asynchronous notifications.",
-            dataTier:
-                "PostgreSQL 15 paired with PostGIS for spatial parcel polygon intersection checks.",
-            integrations:
-                "PayMongo webhooks for real-time payments, Tesseract OCR for document parsing, and SMS gateways.",
+            clientTier: "React dashboards give farmers, reviewers, barangay staff, and inspectors their own workspace. TanStack Query manages API data, Axios handles requests and token refresh, and MapLibre displays barangay maps.",
+            apiTier: "Django REST Framework checks who can submit, review, and issue a permit at each stage. Background tasks process uploaded documents, generate PDFs, and send SMS notifications.",
+            dataTier: "PostgreSQL stores applications, review decisions, permits, payments, and hog surveys. Barangay boundaries are saved as GeoJSON in JSON fields; uploaded documents and generated PDFs live in file storage.",
+            integrations: "OCR.space and Gemini extract details from uploaded documents. PayMongo handles checkout requests, an SMS gateway sends updates, and Cloudinary is configured for media storage. Payment verification still includes a prototype fallback that can mark an unconfirmed payment as successful."
         },
         buildSteps: [
             {
                 stepNumber: "01",
-                title: "Spatial PostGIS Schema & Quarantine Boundaries",
-                desc: "Engineered geospatial models linking livestock farms to municipal GIS parcel coordinates. Every permit request automatically runs spatial polygon intersection queries against active ASF quarantine buffer zones before approval.",
+                title: "Keeping approvals in order",
+                desc: "Municipal and veterinary reviews are separate steps, with checks on who can act and when. Municipal approval and permit issuance lock the application record during updates to prevent conflicting changes."
             },
             {
                 stepNumber: "02",
-                title: "Transactional REST Permit Pipeline",
-                desc: "Developed DRF API viewsets enforcing atomic state machine transitions: Draft → OCR Verification → Agricultural Officer Review → Payment Gateway → Signed Permit Issuance.",
+                title: "Helping staff check documents",
+                desc: "OCR extracts details from uploaded documents and checks the required fields. Staff can see which checks passed and which documents need a closer look."
             },
             {
                 stepNumber: "03",
-                title: "PayMongo Webhook Automation & SMS Alerts",
-                desc: "Implemented idempotent PayMongo checkout webhooks. When fees are confirmed, the system signs a tamper-resistant cryptographic QR code and dispatches SMS verification to farmers.",
+                title: "Checking permits at checkpoints",
+                desc: "Generated PDFs include a QR code linked to the permit record. Inspectors scan it to view transport details and record the inspection."
             },
             {
                 stepNumber: "04",
-                title: "Field Officer QR Checkpoint Scanner",
-                desc: "Constructed an officer portal optimized for low-bandwidth mobile connections at highway checkpoints, enabling instant offline-resilient verification of livestock permit authenticity.",
-            },
+                title: "Barangay surveys and maps",
+                desc: "Barangay staff enter hog counts through survey forms or CSV uploads. The map groups those counts by barangay, and permit release updates the survey totals to account for transported livestock."
+            }
         ],
     },
     {

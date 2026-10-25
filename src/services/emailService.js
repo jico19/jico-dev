@@ -37,3 +37,21 @@ export const sendContactEmail = async ({ name, email, message }) => {
     const response = await emailjs.send(serviceId, templateId, templateParams, publicKey);
     return response;
 };
+
+/** Send a project brief using the existing contact template and recipient. */
+export const sendProjectRequestEmail = async ({
+    name, email, applicationType, description, features, budget, targetDate,
+}) => {
+    const message = [
+        "Custom web application request",
+        `Name: ${name.trim()}`,
+        `Email: ${email.trim()}`,
+        `Application type: ${applicationType.trim()}`,
+        `Project description:\n${description.trim()}`,
+        `Required features:\n${features.trim()}`,
+        `Budget: ${budget?.trim() || "Not specified"}`,
+        `Target date: ${targetDate?.trim() || "Not specified"}`,
+    ].join("\n\n");
+
+    return sendContactEmail({ name: name.trim(), email: email.trim(), message });
+};
