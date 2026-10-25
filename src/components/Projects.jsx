@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import { useState } from "react";
 import { ArrowUpRight, ArrowRight, Ghost, Terminal } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
@@ -22,9 +23,7 @@ const Projects = () => {
                 {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3 mb-10">
                     <div>
-                        <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                            04 / Projects
-                        </span>
+                        <PageOrientation pageOrientation="Projects" />
                         <h2 id="projects-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                             Featured Projects
                         </h2>

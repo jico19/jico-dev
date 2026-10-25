@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import ScrollReveal from "./ScrollReveal";
 import { MessageSquareQuote, Sparkles } from "lucide-react";
 
@@ -24,9 +25,7 @@ const Testimonials = () => {
             <ScrollReveal>
                 {/* Section Header */}
                 <div className="mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        06 / Testimonials
-                    </span>
+                    <PageOrientation pageOrientation="Testimonials" />
                     <h2 id="testimonials-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Testimonials
                     </h2>

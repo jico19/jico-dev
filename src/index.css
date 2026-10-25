@@ -1,5 +1,18 @@
 @import "tailwindcss";
 
+/* Number section labels in document order, starting over for each page. */
+.page-orientations {
+  counter-reset: page-orientation;
+}
+
+.page-orientation {
+  counter-increment: page-orientation;
+}
+
+.page-orientation::before {
+  content: counter(page-orientation, decimal-leading-zero) " / ";
+}
+
 @theme {
   --font-sans: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;

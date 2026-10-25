@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import { useState } from "react";
 import { Check, ArrowUpRight, Send, AlertCircle, Loader2 } from "lucide-react";
 import { FaGithub, FaFacebook } from "react-icons/fa";
@@ -76,9 +77,7 @@ const Contact = () => {
             <ScrollReveal>
                 {/* Section Header */}
                 <div className="mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        07 / Contact
-                    </span>
+                    <PageOrientation pageOrientation="Contact" />
                     <h2 id="contact-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Contact
                     </h2>

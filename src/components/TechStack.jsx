@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import { useEffect, useRef } from "react";
 import ScrollReveal from "./ScrollReveal";
 import {
@@ -102,9 +103,7 @@ const TechStack = () => {
                 {/* Section Header */}
                 <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 mb-6">
                     <div>
-                        <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-1">
-                            02 / Tech Stack
-                        </span>
+                        <PageOrientation pageOrientation="Tech Stack" className="mb-1" />
                         <h2 id="skills-heading" className="text-2xl sm:text-3xl font-semibold tracking-tight text-text-main">
                             Technologies & Tools
                         </h2>

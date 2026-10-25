@@ -15,10 +15,10 @@ const Navbar = () => {
     const navItems = [
         { label: "About", href: "#about", id: "about" },
         { label: "Stack", href: "#skills", id: "skills" },
-        { label: "Services", href: "#services", id: "services" },
         { label: "Projects", href: "#projects", id: "projects" },
         { label: "Experience", href: "#experience", id: "experience" },
         { label: "Testimonials", href: "#testimonials", id: "testimonials" },
+        { label: "Services", href: "#services", id: "services" },
         { label: "Contact", href: "#contact", id: "contact" },
     ];
 
@@ -182,9 +182,8 @@ const Navbar = () => {
             </div>
 
             <header
-                className={`sticky top-0 z-50 w-full h-16 bg-bg/85 backdrop-blur-[12px] border-b transition-colors duration-200 ${
-                    isScrolled ? "border-border" : "border-transparent"
-                }`}
+                className={`sticky top-0 z-50 w-full h-16 bg-bg/85 backdrop-blur-[12px] border-b transition-colors duration-200 ${isScrolled ? "border-border" : "border-transparent"
+                    }`}
             >
                 <div className="max-w-[1080px] mx-auto h-full px-6 flex items-center justify-between">
                     {/* Wordmark */}

@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import ScrollReveal from "./ScrollReveal";
 import AsciiPortrait from "./AsciiPortrait";
 
@@ -7,9 +8,7 @@ const About = () => {
             <ScrollReveal>
                 {/* Section Header */}
                 <div className="mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        01 / About
-                    </span>
+                    <PageOrientation pageOrientation="About" />
                     <h2 id="about-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         About Me
                     </h2>

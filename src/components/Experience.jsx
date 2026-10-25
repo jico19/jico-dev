@@ -1,3 +1,4 @@
+import PageOrientation from "./PageOrientation";
 import ScrollReveal from "./ScrollReveal";
 
 const Experience = () => {
@@ -37,9 +38,7 @@ const Experience = () => {
             <ScrollReveal>
                 {/* Section Header */}
                 <div className="mb-12">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        05 / Experience
-                    </span>
+                    <PageOrientation pageOrientation="Experience" />
                     <h2 id="experience-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Experience
                     </h2>

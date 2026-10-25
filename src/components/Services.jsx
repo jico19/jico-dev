@@ -1,4 +1,5 @@
-﻿import { useEffect, useRef } from "react";
+import PageOrientation from "./PageOrientation";
+import { useEffect, useRef } from "react";
 import { AppWindow, ArrowRight, BookOpen, GraduationCap, Workflow, X } from "lucide-react";
 import ScrollReveal from "./ScrollReveal";
 import ProjectRequestForm from "./ProjectRequestForm";
@@ -58,9 +59,7 @@ const Services = () => {
         <section id="services" aria-labelledby="services-heading" className="max-w-[1080px] mx-auto px-6 py-16 md:py-24">
             <ScrollReveal>
                 <div className="mb-8 md:mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        03 / Services
-                    </span>
+                    <PageOrientation pageOrientation="Services" />
                     <h2 id="services-heading" className="text-3xl font-semibold tracking-tight text-text-main">
                         Custom apps at affordable rates.
                     </h2>

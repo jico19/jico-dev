@@ -43,16 +43,16 @@ function App() {
     <div className="min-h-screen bg-bg text-text-main selection:bg-accent selection:text-accent-contrast relative">
       <AsciiParticles />
       <CustomCursor />
-      <Analytics/>
+      <Analytics />
       <Navbar />
-      <main>
+      <main className="page-orientations">
         <Hero />
         <About />
         <TechStack />
-        <Services />
         <Projects />
         <Experience />
         <Testimonials />
+        <Services />
         <Contact />
       </main>
       <Footer />
