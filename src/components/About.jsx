@@ -1,6 +1,5 @@
 import PageOrientation from "./PageOrientation";
 import ScrollReveal from "./ScrollReveal";
-import AsciiPortrait from "./AsciiPortrait";
 
 const About = () => {
     return (
@@ -18,28 +17,14 @@ const About = () => {
                 </div>
 
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-start">
-                    {/* Left Column: Interactive ASCII Portrait & Quick Badges */}
+                    {/* Left Column: Monochrome Portrait & Quick Badges */}
                     <div className="lg:col-span-4 flex flex-col items-center lg:items-start space-y-4">
-                        <AsciiPortrait
-                            src="/me-pic.png"
+                        <img
+                            src="/me-pic-monochrome.png"
                             alt="Jerwin Nico Quijano"
-                            className="w-full max-w-[280px] sm:max-w-[320px] lg:max-w-none"
+                            className="w-full max-w-[280px] sm:max-w-[320px] lg:max-w-none aspect-[4/5] object-cover object-top rounded-[14px] border border-border bg-surface shadow-sm"
+                            loading="lazy"
                         />
-
-                        <div className="w-full flex flex-wrap gap-2 pt-1 justify-center lg:justify-start">
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
-                                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                BS Information Technology
-                            </span>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
-                                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                Philippines
-                            </span>
-                            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-[6px] border border-border bg-surface text-xs font-mono text-text-muted">
-                                <span className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                Open for Opportunities
-                            </span>
-                        </div>
                     </div>
 
                     {/* Right Column: Bio Narrative */}
