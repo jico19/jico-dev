@@ -2,22 +2,17 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowUp, Terminal } from "lucide-react";
 import { useAnimationsEnabled } from "../lib/motion";
 import { animate } from "../lib/anime";
+import { NAVIGATION_SECTIONS } from "../data/navigationData";
 
-const SECTIONS = [
-    { id: "home", label: "01 / HOME" },
-    { id: "about", label: "02 / ABOUT" },
-    { id: "skills", label: "03 / STACK" },
-    { id: "services", label: "04 / SERVICES" },
-    { id: "projects", label: "05 / PROJECTS" },
-    { id: "experience", label: "06 / EXP" },
-    { id: "testimonials", label: "07 / REVIEWS" },
-    { id: "contact", label: "08 / CONTACT" },
-];
+const SECTIONS = NAVIGATION_SECTIONS.map((section, index) => ({
+    id: section.id,
+    label: `${String(index).padStart(2, "0")} / ${section.label.toUpperCase()}`,
+}));
 
 export const ScrollTelemetry = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [progress, setProgress] = useState(0);
-    const [activeSection, setActiveSection] = useState("01 / HOME");
+    const [activeSection, setActiveSection] = useState(SECTIONS[0].label);
     const containerRef = useRef(null);
     const animationsEnabled = useAnimationsEnabled();
 
@@ -35,7 +30,7 @@ export const ScrollTelemetry = () => {
                 const el = document.getElementById(SECTIONS[i].id);
                 if (el) {
                     const rect = el.getBoundingClientRect();
-                    if (rect.top <= window.innerHeight * 0.45) {
+                    if (rect.top <= window.innerHeight * 0.3) {
                         setActiveSection(SECTIONS[i].label);
                         break;
                     }
@@ -89,7 +84,7 @@ export const ScrollTelemetry = () => {
         <aside
             ref={containerRef}
             aria-label="Scroll telemetry HUD"
-            className="fixed bottom-5 right-5 z-40 hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-[8px] bg-bg/90 backdrop-blur-md border border-border text-xs font-mono text-text-muted shadow-lg hover:border-accent/40 transition-colors select-none group"
+            className="fixed bottom-5 right-5 z-40 hidden sm:flex items-center gap-2.5 px-3 py-1.5 rounded-[4px] bg-bg/90 backdrop-blur-md border border-border text-xs font-mono text-text-muted shadow-lg hover:border-accent/40 transition-colors select-none group"
         >
             <div className="flex items-center gap-1.5 text-text-faint">
                 <Terminal size={12} className="text-accent animate-pulse" />

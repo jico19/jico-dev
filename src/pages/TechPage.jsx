@@ -1,423 +1,89 @@
-import { useState, useMemo, useEffect, useRef } from "react";
-import {
-    ArrowLeft,
-    Search,
-    Layers,
-    ArrowUpRight,
-    Sparkles,
-    Terminal,
-} from "lucide-react";
-import {
-    SiPython,
-    SiDjango,
-    SiFastapi,
-    SiPostgresql,
-    SiReact,
-    SiJavascript,
-    SiTailwindcss,
-    SiSupabase,
-    SiGit,
-    SiPostman,
-    SiSqlite,
-    SiDocker,
-    SiLinux,
-    SiRedis,
-    SiCelery,
-} from "react-icons/si";
+import { useMemo, useState } from "react";
+import { ArrowLeft, ArrowUpRight, Search } from "lucide-react";
+import { TECHNOLOGIES, TECHNOLOGY_CATEGORIES } from "../data/technologiesData";
 import { navigate } from "../lib/router";
-import { animate, stagger } from "../lib/anime";
-import { useAnimationsEnabled } from "../lib/motion";
-import ThemeToggle from "../components/ThemeToggle";
 
-const ALL_TECHNOLOGIES = [
-    // Backend & APIs
-    {
-        name: "Python",
-        category: "Backend",
-        icon: SiPython,
-        level: "Advanced",
-        summary: "Primary language for backend services, data modeling, automated task pipelines, and scripts.",
-        usage: "Used in FarmPass, healthcare SaaS backend, and automation workflows.",
-    },
-    {
-        name: "Django",
-        category: "Backend",
-        icon: SiDjango,
-        level: "Advanced",
-        summary: "High-level web framework for scalable, secure web backends with robust ORM and admin capabilities.",
-        usage: "Powers core municipal livestock permitting and geospatial engine in FarmPass.",
-    },
-    {
-        name: "Django REST Framework",
-        category: "Backend",
-        icon: SiDjango,
-        level: "Advanced",
-        summary: "Toolkit for building flexible, browsable RESTful APIs with serializers and auth policies.",
-        usage: "Built REST permit endpoints, payment verification, and mobile endpoints.",
-    },
-    {
-        name: "FastAPI",
-        category: "Backend",
-        icon: SiFastapi,
-        level: "Proficient",
-        summary: "Modern, high-performance async framework based on standard Python type hints.",
-        usage: "Engineered multi-tenant healthcare SaaS microservices for ST Business Consulting.",
-    },
-    {
-        name: "Celery",
-        category: "Backend",
-        icon: SiCelery,
-        level: "Familiar",
-        summary: "Distributed task queue for background workers, asynchronous jobs, and scheduled jobs.",
-        usage: "Used for background permit notifications, email delivery, and periodic checks.",
-    },
+const TechPage = () => {
+    const [category, setCategory] = useState("All");
+    const [query, setQuery] = useState("");
+    const technologies = useMemo(() => {
+        const search = query.trim().toLowerCase();
+        return TECHNOLOGIES.filter((tech) =>
+            (category === "All" || tech.category === category) &&
+            [tech.name, tech.summary, tech.usage].some((value) => value.toLowerCase().includes(search))
+        );
+    }, [category, query]);
 
-    // Data & Cloud
-    {
-        name: "PostgreSQL",
-        category: "Database",
-        icon: SiPostgresql,
-        level: "Advanced",
-        summary: "Advanced relational database system with PostGIS geospatial spatial indexing and ACID compliance.",
-        usage: "Architected geospatial schemas for zoning maps and healthcare client records.",
-    },
-    {
-        name: "Supabase",
-        category: "Database",
-        icon: SiSupabase,
-        level: "Proficient",
-        summary: "Postgres-backed backend-as-a-service providing row-level security (RLS), real-time, and storage.",
-        usage: "Powers state-scoped healthcare authorization, cryptographic logs, and document storage.",
-    },
-    {
-        name: "SQLite3",
-        category: "Database",
-        icon: SiSqlite,
-        level: "Proficient",
-        summary: "Lightweight, zero-config relational database engine ideal for testing and rapid local prototypes.",
-        usage: "Used for automated test suites (235+ tests) and offline local verification.",
-    },
-    {
-        name: "Redis",
-        category: "Database",
-        icon: SiRedis,
-        level: "Familiar",
-        summary: "In-memory data store used as a high-speed cache, session broker, and message queue backend.",
-        usage: "Employed for session rate-limiting, temporary token caching, and worker broker queues.",
-    },
-
-    // Frontend UI
-    {
-        name: "React 19",
-        category: "Frontend",
-        icon: SiReact,
-        level: "Proficient",
-        summary: "Declarative component library with Actions, optimistic state, and concurrent UI primitives.",
-        usage: "Engineered responsive client dashboards for FarmPass, STBC SaaS, and developer portfolios.",
-    },
-    {
-        name: "Tailwind CSS",
-        category: "Frontend",
-        icon: SiTailwindcss,
-        level: "Advanced",
-        summary: "Utility-first CSS framework for precision styling, responsive grids, and design tokens.",
-        usage: "Styled modular components across all projects with custom dark/light color variables.",
-    },
-    {
-        name: "JavaScript (ES6+)",
-        category: "Frontend",
-        icon: SiJavascript,
-        level: "Proficient",
-        summary: "Core client language leveraging modern async/await, closures, and DOM event architecture.",
-        usage: "Interactive animations, custom cursor physics, and real-time state synchronization.",
-    },
-
-    // DevOps & Tooling
-    {
-        name: "Git & GitHub",
-        category: "DevOps",
-        icon: SiGit,
-        level: "Advanced",
-        summary: "Distributed version control system, branch workflows, pull requests, and automated actions.",
-        usage: "Maintained team repositories, release tags, and version history across client projects.",
-    },
-    {
-        name: "Linux / CLI",
-        category: "DevOps",
-        icon: SiLinux,
-        level: "Proficient",
-        summary: "UNIX environment navigation, Bash scripting, systemd service management, and SSH deployment.",
-        usage: "Server provisioning, VPS deployment, environment configuration, and service monitoring.",
-    },
-    {
-        name: "Postman",
-        category: "DevOps",
-        icon: SiPostman,
-        level: "Proficient",
-        summary: "API platform for designing, testing, and documenting HTTP and REST endpoints.",
-        usage: "Created automated integration test collections and regression suites for permit endpoints.",
-    },
-    {
-        name: "Docker",
-        category: "DevOps",
-        icon: SiDocker,
-        level: "Familiar",
-        summary: "Containerization platform to standardize application runtimes across development and production.",
-        usage: "Containerized backend services and PostgreSQL instances for reproducible environments.",
-    },
-];
-
-const CATEGORIES = ["All", "Backend", "Database", "Frontend", "DevOps"];
-
-export const TechPage = () => {
-    const [selectedCategory, setSelectedCategory] = useState("All");
-    const [searchQuery, setSearchQuery] = useState("");
-    const gridRef = useRef(null);
-    const animationsEnabled = useAnimationsEnabled();
-
-    // Scroll to top on mount
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
-
-    const filteredTech = useMemo(() => {
-        return ALL_TECHNOLOGIES.filter((tech) => {
-            const matchesCategory =
-                selectedCategory === "All" || tech.category === selectedCategory;
-            const matchesQuery =
-                tech.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                tech.summary.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                tech.usage.toLowerCase().includes(searchQuery.toLowerCase());
-            return matchesCategory && matchesQuery;
-        });
-    }, [selectedCategory, searchQuery]);
-
-    // Anime.js stagger on grid change
-    useEffect(() => {
-        if (!gridRef.current || !animationsEnabled) return;
-        const cards = gridRef.current.querySelectorAll(".tech-card");
-        if (!cards.length) return;
-
-        animate(cards, {
-            opacity: [0, 1],
-            translateY: [12, 0],
-            delay: stagger(35, { start: 30 }),
-            duration: 300,
-            ease: "outQuad",
-        });
-    }, [selectedCategory, searchQuery, animationsEnabled]);
-
-    const handleBack = () => {
+    const returnToContact = () => {
         navigate("/");
-        // Wait briefly for route transition then scroll to skills section
-        setTimeout(() => {
-            const el = document.getElementById("skills");
-            if (el) {
-                el.scrollIntoView({ behavior: "smooth" });
-            }
-        }, 80);
+        requestAnimationFrame(() => {
+            document.getElementById("contact")?.scrollIntoView();
+        });
     };
 
     return (
-        <div className="min-h-screen bg-bg text-text-main py-12 md:py-20 px-6">
+        <div className="min-h-screen text-text-main px-6 md:px-10 py-8 md:py-14">
             <div className="max-w-[1080px] mx-auto">
-                {/* Back navigation & breadcrumb */}
-                <div className="flex items-center justify-between gap-4 mb-8">
-                    <button
-                        type="button"
-                        onClick={handleBack}
-                        className="
-                            inline-flex items-center gap-2
-                            px-3.5 py-1.5
-                            rounded-[8px]
-                            bg-surface
-                            border border-border
-                            hover:border-accent/50
-                            text-xs font-mono text-text-muted
-                            hover:text-text-main
-                            transition-all
-                            cursor-pointer
-                        "
-                    >
-                        <ArrowLeft size={14} className="text-accent" />
-                        <span>Back to portfolio</span>
-                    </button>
-
-                    <div className="flex items-center gap-3">
-                        <div className="hidden sm:flex items-center gap-2 text-xs font-mono text-text-faint">
-                            <Terminal size={12} className="text-accent" />
-                            <span>~/jico-dev/technologies</span>
-                        </div>
-                        <ThemeToggle />
-                    </div>
-                </div>
-
-                {/* Page Title & Subtitle */}
-                <div className="mb-10">
-                    <span className="block text-xs font-mono tracking-wider text-text-faint uppercase mb-2">
-                        System Architecture // Dependencies
-                    </span>
-                    <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold tracking-tight text-text-main mb-3">
-                        Technologies & Tools
-                    </h1>
-                    <p className="text-sm sm:text-base text-text-muted max-w-[64ch] leading-relaxed">
-                        A detailed breakdown of all languages, frameworks, databases, and developer infrastructure used to build scalable production applications.
+                <header className="flex items-center justify-between gap-4 mb-10">
+                    <a href="/" onClick={(event) => {
+                        event.preventDefault();
+                        navigate("/");
+                    }} className="min-h-11 inline-flex items-center gap-2 text-sm text-text-muted hover:text-text-main">
+                        <ArrowLeft size={15} aria-hidden="true" /> Back to portfolio
+                    </a>
+                </header>
+                <main>
+                    <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight text-text-main mb-3">Technologies & tools</h1>
+                    <p className="text-sm sm:text-base text-text-muted max-w-[64ch] mb-8 leading-relaxed">
+                        What I use and where it appears in my work, from React interfaces
+                        to Python APIs and PostgreSQL data.
                     </p>
-                </div>
-
-                {/* Filter & Search Bar */}
-                <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-8 p-1.5 rounded-[10px] bg-surface border border-border">
-                    {/* Category Tabs */}
-                    <div className="flex flex-wrap items-center gap-1">
-                        {CATEGORIES.map((cat) => (
-                            <button
-                                key={cat}
-                                type="button"
-                                onClick={() => setSelectedCategory(cat)}
-                                className={`
-                                    px-3 py-1.5 rounded-[7px] text-xs font-mono transition-all duration-150 cursor-pointer
-                                    ${
-                                        selectedCategory === cat
-                                            ? "bg-surface-2 text-text-main border border-border font-medium shadow-xs"
-                                            : "text-text-muted hover:text-text-main border border-transparent"
-                                    }
-                                `}
-                            >
-                                {cat}
-                            </button>
-                        ))}
+                    <div className="flex flex-col lg:flex-row gap-4 justify-between mb-8">
+                        <div className="flex flex-wrap gap-2" aria-label="Filter technologies by category">
+                            {["All", ...TECHNOLOGY_CATEGORIES].map((item) => (
+                                <button key={item} type="button" aria-pressed={category === item} onClick={() => setCategory(item)} className={`min-h-11 px-3 rounded-lg border text-sm transition-colors ${category === item ? "border-accent text-accent bg-accent/10" : "border-border text-text-muted hover:text-text-main"}`}>
+                                    {item}
+                                </button>
+                            ))}
+                        </div>
+                        <div className="relative lg:w-72">
+                            <label htmlFor="tech-search" className="sr-only">Search technologies</label>
+                            <Search size={16} aria-hidden="true" className="absolute left-3 top-3.5 text-text-muted" />
+                            <input id="tech-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search technologies" className="w-full h-11 pl-10 pr-3 rounded-lg bg-surface border border-border text-sm text-text-main placeholder:text-text-faint focus:border-accent focus:outline-none" />
+                        </div>
                     </div>
-
-                    {/* Search Input */}
-                    <div className="relative flex items-center min-w-[200px] sm:min-w-[240px]">
-                        <Search
-                            size={14}
-                            className="absolute left-3 text-text-faint pointer-events-none"
-                        />
-                        <input
-                            type="text"
-                            placeholder="Filter by keyword..."
-                            value={searchQuery}
-                            onChange={(e) => setSearchQuery(e.target.value)}
-                            className="
-                                w-full
-                                h-8 pl-8 pr-3
-                                rounded-[6px]
-                                bg-bg
-                                border border-border
-                                text-xs font-mono text-text-main
-                                placeholder:text-text-faint
-                                focus:outline-hidden
-                                focus:border-accent
-                                transition-colors
-                            "
-                        />
-                    </div>
-                </div>
-
-                {/* Technology Cards Grid */}
-                <div
-                    ref={gridRef}
-                    className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-16"
-                >
-                    {filteredTech.map((tech) => {
-                        const Icon = tech.icon;
-
-                        return (
-                            <div
-                                key={tech.name}
-                                className="
-                                    tech-card
-                                    p-5
-                                    rounded-[12px]
-                                    border border-border
-                                    bg-surface
-                                    hover:border-accent/40
-                                    transition-all
-                                    duration-200
-                                    flex flex-col justify-between
-                                    gap-4
-                                    group
-                                "
-                            >
-                                <div>
-                                    {/* Card Header: Icon, Name, Category */}
-                                    <div className="flex items-start justify-between gap-3 mb-3">
-                                        <div className="flex items-center gap-2.5">
-                                            <div className="w-8 h-8 rounded-[7px] bg-bg border border-border flex items-center justify-center text-accent group-hover:scale-105 transition-transform shrink-0">
-                                                <Icon size={16} />
-                                            </div>
-                                            <div>
-                                                <h2 className="text-sm font-semibold text-text-main group-hover:text-accent transition-colors">
-                                                    {tech.name}
-                                                </h2>
-                                                <span className="text-[10px] font-mono text-text-faint">
-                                                    {tech.category}
-                                                </span>
-                                            </div>
+                    <p role="status" className="sr-only">{technologies.length} technologies shown</p>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                        {technologies.map((tech) => {
+                            const Icon = tech.icon;
+                            return (
+                                <article key={tech.name} className="blueprint-panel p-5">
+                                    <div className="flex items-center gap-3 mb-4">
+                                        <Icon size={22} className="text-accent shrink-0" aria-hidden="true" />
+                                        <div>
+                                            <h2 className="text-base font-medium text-text-main">{tech.name}</h2>
+                                            <p className="text-xs text-text-muted">{tech.category}</p>
                                         </div>
-
-                                        <span className="px-2 py-0.5 rounded-[4px] bg-bg border border-border text-[10px] font-mono text-text-muted">
-                                            {tech.level}
-                                        </span>
                                     </div>
-
-                                    {/* Summary */}
-                                    <p className="text-xs text-text-muted leading-relaxed mb-3">
-                                        {tech.summary}
-                                    </p>
-                                </div>
-
-                                {/* Usage footer */}
-                                <div className="pt-2.5 border-t border-border/60">
-                                    <div className="text-[11px] font-mono text-text-faint flex items-start gap-1.5 leading-snug">
-                                        <span className="text-accent shrink-0">↳</span>
-                                        <span>{tech.usage}</span>
-                                    </div>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-
-                {/* Bottom Inquiry Card */}
-                <div className="p-6 sm:p-8 rounded-[12px] border border-border bg-surface flex flex-col sm:flex-row items-center justify-between gap-5 text-center sm:text-left">
-                    <div>
-                        <h3 className="text-lg font-semibold text-text-main mb-1">
-                            Need a custom architecture built?
-                        </h3>
-                        <p className="text-xs sm:text-sm text-text-muted max-w-[50ch]">
-                            Available for fullstack web development, REST API engineering, and capstone system creation.
-                        </p>
+                                    <p className="text-sm text-text-muted leading-relaxed mb-4">{tech.summary}</p>
+                                    <p className="pt-3 border-t border-border text-xs text-text-muted leading-relaxed">{tech.usage}</p>
+                                </article>
+                            );
+                        })}
                     </div>
-
-                    <button
-                        type="button"
-                        onClick={() => {
-                            navigate("/");
-                            setTimeout(() => {
-                                const el = document.getElementById("contact");
-                                if (el) el.scrollIntoView({ behavior: "smooth" });
-                            }, 80);
-                        }}
-                        className="
-                            h-10 px-5
-                            rounded-[8px]
-                            bg-accent
-                            text-accent-contrast
-                            text-xs sm:text-sm font-medium
-                            inline-flex items-center gap-2
-                            hover:-translate-y-0.5
-                            hover:brightness-95
-                            transition-all
-                            cursor-pointer
-                            shrink-0
-                        "
-                    >
-                        <span>Start a conversation</span>
-                        <ArrowUpRight size={14} />
-                    </button>
-                </div>
+                    {technologies.length === 0 && (
+                        <p className="py-12 text-center text-text-muted">No technologies match. Try another search or category.</p>
+                    )}
+                    <div className="mt-12 p-6 rounded-xl border border-border bg-surface flex flex-wrap items-center justify-between gap-4">
+                        <div>
+                            <h2 className="text-lg font-medium text-text-main mb-1">Hiring a junior fullstack developer?</h2>
+                            <p className="text-sm text-text-muted">I’d be happy to discuss my projects and your team’s needs.</p>
+                        </div>
+                        <button type="button" onClick={returnToContact} className="min-h-11 px-5 rounded-lg bg-accent text-accent-contrast text-sm font-medium inline-flex items-center gap-2 hover:brightness-95">
+                            Get in touch <ArrowUpRight size={15} aria-hidden="true" />
+                        </button>
+                    </div>
+                </main>
             </div>
         </div>
     );

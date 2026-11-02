@@ -1,357 +1,155 @@
-import { useState, useEffect, useRef } from "react";
-import { Menu, X } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { ArrowRight, ArrowUpRight, Menu, X } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import ThemeToggle from "./ThemeToggle";
+import MotionToggle from "./MotionToggle";
+import { useCurrentPath, navigate } from "../lib/router";
+import { getAnimationsEnabled } from "../lib/motion";
+import { NAVIGATION_SECTIONS } from "../data/navigationData";
+
+const SectionLinks = ({ activeSection, onNavigate }) => (
+    <div className="space-y-1">
+        {NAVIGATION_SECTIONS.map((section, index) => (
+            <a key={section.id} href={`/#${section.id}`} onClick={(event) => onNavigate(event, section.id)}
+                aria-current={activeSection === section.id ? "location" : undefined}
+                className={`sidebar-link group flex min-h-11 items-center gap-3 border-l px-3 text-sm transition-colors ${activeSection === section.id ? "border-accent bg-accent/5 text-text-main" : "border-transparent text-text-muted hover:bg-surface hover:text-text-main"}`}>
+                <span className={`font-mono text-[10px] ${activeSection === section.id ? "text-accent" : "text-text-faint"}`} aria-hidden="true">
+                    {String(index).padStart(2, "0")}
+                </span>
+                <span>{section.label}</span>
+                {activeSection === section.id && <ArrowRight size={13} className="ml-auto text-accent" aria-hidden="true" />}
+            </a>
+        ))}
+    </div>
+);
+
+const ProfessionalLinks = () => (
+    <div className="flex items-center gap-4">
+        <a href="https://github.com/jico19" target="_blank" rel="noopener noreferrer" aria-label="GitHub profile" className="min-h-11 inline-flex items-center text-text-muted hover:text-accent"><FaGithub size={16} aria-hidden="true" /></a>
+        <a href="https://www.linkedin.com/in/jerwin-nico-h-quijano-0471343b7/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn profile" className="min-h-11 inline-flex items-center text-text-muted hover:text-accent"><FaLinkedin size={16} aria-hidden="true" /></a>
+    </div>
+);
 
 const Navbar = () => {
-    const [activeSection, setActiveSection] = useState("");
+    const [currentPath] = useCurrentPath();
+    const [activeSection, setActiveSection] = useState("home");
     const [isOpen, setIsOpen] = useState(false);
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [scrollProgress, setScrollProgress] = useState(0);
+    const dialogRef = useRef(null);
+    const triggerRef = useRef(null);
+    const selectedSection = currentPath === "/tech" ? "skills" : currentPath === "/projects" ? "projects" : activeSection;
 
-    const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0, opacity: 0 });
-    const navLinksRef = useRef({});
-    const mobileMenuRef = useRef(null);
-
-    const navItems = [
-        { label: "About", href: "#about", id: "about" },
-        { label: "Stack", href: "#skills", id: "skills" },
-        { label: "Projects", href: "#projects", id: "projects" },
-        { label: "Experience", href: "#experience", id: "experience" },
-        { label: "Testimonials", href: "#testimonials", id: "testimonials" },
-        { label: "Services", href: "#services", id: "services" },
-        { label: "Contact", href: "#contact", id: "contact" },
-    ];
-
-    // Scroll progress & sticky border detection
     useEffect(() => {
-        const handleScrollState = () => {
-            const scrollY = window.scrollY;
-            setIsScrolled(scrollY > 12);
-
-            const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
-            setScrollProgress(totalHeight > 0 ? Math.min(100, (scrollY / totalHeight) * 100) : 0);
-        };
-
-        window.addEventListener("scroll", handleScrollState, { passive: true });
-        handleScrollState();
-        return () => window.removeEventListener("scroll", handleScrollState);
-    }, []);
-
-    // Active section spy
-    useEffect(() => {
-        const observerOptions = {
-            root: null,
-            rootMargin: "-25% 0px -45% 0px",
-            threshold: 0,
-        };
-
-        const observedIds = ["home", "about", "skills", "services", "projects", "experience", "testimonials", "contact"];
-        const observerCallback = (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    setActiveSection(entry.target.id);
-                }
-            });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
-
-        observedIds.forEach((id) => {
-            const el = document.getElementById(id);
-            if (el) observer.observe(el);
-        });
-
-        const handleEdgeScroll = () => {
-            const scrollY = window.scrollY;
-            const scrollBottom = window.innerHeight + scrollY;
-            const docHeight = document.documentElement.scrollHeight;
-
-            if (scrollBottom >= docHeight - 80) {
-                setActiveSection("contact");
-            } else if (scrollY < 80) {
-                setActiveSection("home");
+        if (currentPath !== "/") return;
+        let frame = 0;
+        const update = () => {
+            frame = 0;
+            let selected = "home";
+            for (const section of NAVIGATION_SECTIONS) {
+                const element = document.getElementById(section.id);
+                if (element && element.getBoundingClientRect().top <= window.innerHeight * 0.3) selected = section.id;
             }
+            if (window.scrollY + window.innerHeight >= document.documentElement.scrollHeight - 12) selected = "contact";
+            setActiveSection(selected);
         };
-
-        window.addEventListener("scroll", handleEdgeScroll, { passive: true });
-
+        const scheduleUpdate = () => {
+            if (!frame) frame = requestAnimationFrame(update);
+        };
+        scheduleUpdate();
+        window.addEventListener("scroll", scheduleUpdate, { passive: true });
+        window.addEventListener("resize", scheduleUpdate);
         return () => {
-            observedIds.forEach((id) => {
-                const el = document.getElementById(id);
-                if (el) observer.unobserve(el);
-            });
-            window.removeEventListener("scroll", handleEdgeScroll);
+            cancelAnimationFrame(frame);
+            window.removeEventListener("scroll", scheduleUpdate);
+            window.removeEventListener("resize", scheduleUpdate);
         };
-    }, []);
+    }, [currentPath]);
 
-    // Update active sliding underline position
     useEffect(() => {
-        const activeEl = navLinksRef.current[activeSection];
-        if (activeEl) {
-            setIndicatorStyle({
-                left: activeEl.offsetLeft,
-                width: activeEl.offsetWidth,
-                opacity: 1,
-            });
-        } else {
-            setIndicatorStyle((prev) => ({ ...prev, opacity: 0 }));
-        }
-    }, [activeSection]);
-
-    // Handle resize to close mobile drawer
-    useEffect(() => {
-        const handleResize = () => {
-            if (window.innerWidth >= 768) {
-                setIsOpen(false);
-            }
-        };
-        window.addEventListener("resize", handleResize);
-        return () => window.removeEventListener("resize", handleResize);
-    }, []);
-
-    // Prevent body scroll and handle focus trap when mobile menu is open
-    useEffect(() => {
-        if (isOpen) {
-            document.body.style.overflow = "hidden";
-
-            const handleKeyDown = (e) => {
-                if (e.key === "Escape") {
-                    setIsOpen(false);
-                    return;
-                }
-
-                if (e.key === "Tab" && mobileMenuRef.current) {
-                    const focusableElements = mobileMenuRef.current.querySelectorAll(
-                        'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])'
-                    );
-                    if (focusableElements.length === 0) return;
-
-                    const firstElement = focusableElements[0];
-                    const lastElement = focusableElements[focusableElements.length - 1];
-
-                    if (e.shiftKey && document.activeElement === firstElement) {
-                        e.preventDefault();
-                        lastElement.focus();
-                    } else if (!e.shiftKey && document.activeElement === lastElement) {
-                        e.preventDefault();
-                        firstElement.focus();
-                    }
-                }
-            };
-
-            window.addEventListener("keydown", handleKeyDown);
-            return () => {
-                window.removeEventListener("keydown", handleKeyDown);
-                document.body.style.overflow = "unset";
-            };
-        } else {
-            document.body.style.overflow = "unset";
-        }
+        if (!isOpen) return;
+        const previousOverflow = document.body.style.overflow;
+        document.body.style.overflow = "hidden";
+        return () => { document.body.style.overflow = previousOverflow; };
     }, [isOpen]);
 
-    const scrollToSection = (e, id) => {
-        e.preventDefault();
-        setIsOpen(false);
+    useEffect(() => {
+        const desktop = window.matchMedia("(min-width: 1024px)");
+        const closeOnDesktop = () => {
+            if (desktop.matches && dialogRef.current?.open) dialogRef.current.close();
+        };
+        desktop.addEventListener("change", closeOnDesktop);
+        return () => desktop.removeEventListener("change", closeOnDesktop);
+    }, []);
 
-        const target = document.getElementById(id);
-        if (target) {
-            const navOffset = 70;
-            const elementPosition = target.getBoundingClientRect().top;
-            const offsetPosition = elementPosition + window.scrollY - navOffset;
+    const goToSection = (event, id) => {
+        if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
+        event.preventDefault();
+        if (dialogRef.current?.open) dialogRef.current.close();
+        if (currentPath !== "/") navigate("/");
+        setActiveSection(id);
+        requestAnimationFrame(() => {
+            document.getElementById(id)?.scrollIntoView({ behavior: getAnimationsEnabled() ? "smooth" : "instant", block: "start" });
+            window.history.replaceState(null, "", `/#${id}`);
+        });
+    };
 
-            window.scrollTo({
-                top: offsetPosition,
-                behavior: "smooth",
-            });
-            window.history.pushState(null, "", `#${id}`);
-            setActiveSection(id);
-        }
+    const openMenu = () => {
+        if (!dialogRef.current.open) dialogRef.current.showModal();
+        setIsOpen(true);
+    };
+
+    const closeOnBackdrop = (event) => {
+        if (event.target !== event.currentTarget) return;
+        const bounds = event.currentTarget.getBoundingClientRect();
+        if (event.clientX < bounds.left || event.clientX > bounds.right || event.clientY < bounds.top || event.clientY > bounds.bottom) dialogRef.current.close();
     };
 
     return (
         <>
-            {/* 2px viewport top scroll progress line */}
-            <div
-                aria-hidden="true"
-                className="fixed top-0 left-0 right-0 h-[2px] z-[60] bg-transparent pointer-events-none"
-            >
-                <div
-                    className="h-full bg-accent transition-[width] duration-150 ease-out"
-                    style={{ width: `${scrollProgress}%` }}
-                />
-            </div>
-
-            <header
-                className={`sticky top-0 z-50 w-full h-16 bg-bg/85 backdrop-blur-[12px] border-b transition-colors duration-200 ${isScrolled ? "border-border" : "border-transparent"
-                    }`}
-            >
-                <div className="max-w-[1080px] mx-auto h-full px-6 flex items-center justify-between">
-                    {/* Wordmark */}
-                    <a
-                        href="#home"
-                        onClick={(e) => scrollToSection(e, "home")}
-                        className="group inline-flex items-center gap-1.5 font-semibold text-text-main text-sm sm:text-base tracking-tight"
-                    >
-                        <span className="font-mono text-accent text-xs font-normal group-hover:translate-x-0.5 transition-transform duration-150">~/</span>
-                        <span className="group-hover:text-text-main transition-colors">Jerwin Quijano</span>
-                        <span
-                            className="inline-block w-1.5 h-3.5 bg-accent ml-0.5 animate-blink-once"
-                            aria-hidden="true"
-                        />
+            <a href="#main-content" className="skip-link">Skip to content</a>
+            <aside className="fixed inset-y-0 left-0 z-50 hidden w-56 flex-col overflow-y-auto border-r border-border bg-bg/95 px-5 py-7 backdrop-blur-xl lg:flex">
+                <a href="/#home" onClick={(event) => goToSection(event, "home")} aria-label="Jerwin Quijano, overview" className="inline-flex items-center gap-3">
+                    <span className="brand-mark font-mono text-xl font-semibold text-text-main">JQ<span className="text-accent">.</span></span>
+                    <span className="text-xs leading-relaxed text-text-muted">Jerwin Quijano<br /><span className="font-mono text-[10px] text-text-faint">developer portfolio</span></span>
+                </a>
+                <nav aria-label="Primary" className="mt-10 shrink-0">
+                    <p className="mb-4 pl-3 font-mono text-[9px] uppercase tracking-[0.2em] text-text-faint">Index / 00 — {String(NAVIGATION_SECTIONS.length - 1).padStart(2, "0")}</p>
+                    <SectionLinks activeSection={selectedSection} onNavigate={goToSection} />
+                </nav>
+                <div className="mt-auto shrink-0 pt-6">
+                    <p className="mb-4 flex items-center gap-2 text-[11px] text-text-muted"><span className="h-1.5 w-1.5 bg-accent" aria-hidden="true" />Open to junior roles</p>
+                    <a href="/Jerwin_Quijano_Resume.pdf" target="_blank" rel="noopener noreferrer" className="blueprint-button flex min-h-10 items-center justify-between border border-border bg-surface px-3 text-xs text-text-main hover:border-accent">
+                        Download resume <ArrowUpRight size={14} className="text-accent" aria-hidden="true" />
                     </a>
+                    <div className="mt-5 flex items-center justify-between border-t border-border pt-3"><ProfessionalLinks /><ThemeToggle /></div>
+                    <MotionToggle className="min-h-10" />
+                    <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.15em] text-text-faint">Based in the Philippines</p>
+                </div>
+            </aside>
 
-                    {/* Desktop Navigation */}
-                    <nav aria-label="Primary" className="hidden md:flex items-center gap-6">
-                        <div className="relative flex items-center gap-1">
-                            {navItems.map((item) => {
-                                const isActive = activeSection === item.id;
-                                return (
-                                    <a
-                                        key={item.id}
-                                        href={item.href}
-                                        ref={(el) => {
-                                            if (el) navLinksRef.current[item.id] = el;
-                                        }}
-                                        onClick={(e) => scrollToSection(e, item.id)}
-                                        className={`
-                                            px-3 py-1.5
-                                            text-sm
-                                            font-medium
-                                            transition-colors
-                                            duration-150
-                                            cursor-pointer
-                                            ${isActive ? "text-text-main" : "text-text-muted hover:text-text-main"}
-                                        `}
-                                    >
-                                        {item.label}
-                                    </a>
-                                );
-                            })}
-
-                            {/* Sliding underline indicator */}
-                            <span
-                                aria-hidden="true"
-                                className="absolute bottom-0 h-[2px] bg-accent transition-all duration-200 ease-out pointer-events-none"
-                                style={{
-                                    transform: `translateX(${indicatorStyle.left}px)`,
-                                    width: `${indicatorStyle.width}px`,
-                                    opacity: indicatorStyle.opacity,
-                                }}
-                            />
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                            <ThemeToggle />
-                            <a
-                                href="#contact"
-                                onClick={(e) => scrollToSection(e, "contact")}
-                                className="
-                                    h-9 px-4
-                                    inline-flex items-center justify-center
-                                    rounded-[8px]
-                                    bg-accent
-                                    text-accent-contrast
-                                    text-xs sm:text-sm
-                                    font-medium
-                                    hover:-translate-y-0.5
-                                    hover:brightness-95
-                                    active:translate-y-0
-                                    active:scale-[0.96]
-                                    transition-all
-                                    duration-150
-                                    cursor-pointer
-                                "
-                            >
-                                Let's talk
-                            </a>
-                        </div>
-                    </nav>
-
-                    {/* Mobile Menu & Theme Toggle */}
-                    <div className="flex md:hidden items-center gap-2">
-                        <ThemeToggle />
-                        <button
-                            type="button"
-                            onClick={() => setIsOpen(!isOpen)}
-                            aria-label={isOpen ? "Close menu" : "Open menu"}
-                            aria-expanded={isOpen}
-                            aria-controls="mobile-menu-drawer"
-                            className="
-                                w-9 h-9
-                                inline-flex items-center justify-center
-                                rounded-[8px]
-                                text-text-muted
-                                hover:text-text-main
-                                hover:bg-surface-2
-                                border border-transparent
-                                hover:border-border
-                                transition-colors
-                                cursor-pointer
-                            "
-                        >
-                            {isOpen ? <X size={20} /> : <Menu size={20} />}
-                        </button>
-                    </div>
+            <header className="fixed inset-x-0 top-0 z-50 flex h-16 items-center justify-between border-b border-border bg-bg/95 px-6 backdrop-blur-xl lg:hidden">
+                <a href="/#home" onClick={(event) => goToSection(event, "home")} className="inline-flex min-h-11 items-center gap-2 font-mono text-sm text-text-main"><span className="font-semibold">JQ<span className="text-accent">.</span></span><span className="text-text-faint">/ portfolio</span></a>
+                <div className="flex items-center gap-2">
+                    <ThemeToggle />
+                    <button ref={triggerRef} type="button" onClick={openMenu} aria-label="Open navigation" aria-expanded={isOpen} aria-controls="mobile-navigation" className="inline-flex h-11 w-11 items-center justify-center border border-border text-text-main">
+                        <Menu size={19} aria-hidden="true" />
+                    </button>
                 </div>
             </header>
 
-            {/* Mobile Sheet / Drawer */}
-            <div
-                id="mobile-menu-drawer"
-                ref={mobileMenuRef}
-                role="dialog"
-                aria-modal="true"
-                aria-label="Navigation menu"
-                aria-hidden={!isOpen}
-                className={`
-                    fixed inset-x-0 bottom-0 top-16 z-40
-                    bg-bg/95 backdrop-blur-xl
-                    border-b border-border
-                    md:hidden
-                    flex flex-col justify-between
-                    p-6
-                    transition-all duration-200 ease-out
-                    ${isOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-4 pointer-events-none"}
-                `}
-            >
-                <div className="flex flex-col gap-2 pt-4">
-                    {navItems.map((item) => (
-                        <a
-                            key={item.id}
-                            href={item.href}
-                            onClick={(e) => scrollToSection(e, item.id)}
-                            className="
-                                text-xl
-                                font-medium
-                                py-3
-                                text-text-muted
-                                hover:text-text-main
-                                transition-colors
-                            "
-                        >
-                            {item.label}
-                        </a>
-                    ))}
+            <dialog ref={dialogRef} id="mobile-navigation" aria-labelledby="navigation-heading" className="mobile-navigation" onClick={closeOnBackdrop} onClose={() => {
+                setIsOpen(false);
+                triggerRef.current?.focus();
+            }}>
+                <div className="flex items-center justify-between border-b border-border px-5 py-3">
+                    <h2 id="navigation-heading" className="font-mono text-xs uppercase tracking-widest text-text-muted">Portfolio / Index</h2>
+                    <button type="button" onClick={() => dialogRef.current.close()} aria-label="Close navigation" className="inline-flex h-11 w-11 items-center justify-center text-text-main"><X size={19} aria-hidden="true" /></button>
                 </div>
-
-                <div className="pb-8 pt-4">
-                    <a
-                        href="#contact"
-                        onClick={(e) => scrollToSection(e, "contact")}
-                        className="
-                            w-full h-11
-                            inline-flex items-center justify-center
-                            rounded-[8px]
-                            bg-accent
-                            text-accent-contrast
-                            text-sm font-medium
-                            transition-all
-                        "
-                    >
-                        Let's talk
-                    </a>
+                <nav aria-label="Mobile" className="p-4"><SectionLinks activeSection={selectedSection} onNavigate={goToSection} /></nav>
+                <div className="px-6 pb-3">
+                    <a href="/Jerwin_Quijano_Resume.pdf" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 text-xs text-text-main hover:text-accent">Download resume <ArrowUpRight size={14} aria-hidden="true" /></a>
                 </div>
-            </div>
+                <div className="flex items-center justify-between border-t border-border px-6 py-2"><ProfessionalLinks /><MotionToggle className="min-h-11" /></div>
+            </dialog>
         </>
     );
 };

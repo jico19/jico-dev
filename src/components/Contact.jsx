@@ -1,7 +1,7 @@
 import PageOrientation from "./PageOrientation";
 import { useState } from "react";
 import { Check, ArrowUpRight, Send, AlertCircle, Loader2 } from "lucide-react";
-import { FaGithub, FaFacebook } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import ScrollReveal from "./ScrollReveal";
 import { sendContactEmail } from "../services/emailService";
 import { FaLinkedin } from "react-icons/fa6";
@@ -42,11 +42,11 @@ const Contact = () => {
             setTimeout(() => {
                 setStatus((prev) => ({ ...prev, success: false }));
             }, 5000);
-        } catch (err) {
+        } catch {
             setStatus({
                 loading: false,
                 success: false,
-                error: err?.text || err?.message || "Failed to send message. Please try again.",
+                error: "Your message could not be sent. Please try again or contact me through LinkedIn.",
             });
         }
     };
@@ -59,21 +59,15 @@ const Contact = () => {
             icon: FaGithub,
         },
         {
-            label: "Facebook",
-            value: "facebook.com/Ekkosecc",
-            link: "https://www.facebook.com/Ekkosecc",
-            icon: FaFacebook,
-        },
-        {
             label: "LinkedIn",
-            value: "https://www.linkedin.com/in/jerwin-nico-h-quijano",
+            value: "Connect on LinkedIn",
             link: "https://www.linkedin.com/in/jerwin-nico-h-quijano-0471343b7/",
             icon:  FaLinkedin,
         },
     ];
 
     return (
-        <section id="contact" aria-labelledby="contact-heading" className="max-w-[1080px] mx-auto px-6 py-16 md:py-24">
+        <section id="contact" aria-labelledby="contact-heading" className="max-w-[1080px] mx-auto px-6 md:px-10 py-12 md:py-16">
             <ScrollReveal>
                 {/* Section Header */}
                 <div className="mb-10">
@@ -82,14 +76,14 @@ const Contact = () => {
                         Contact
                     </h2>
                     <p className="mt-2 text-sm text-text-muted max-w-[60ch]">
-                        Interested in working together or discussing a project? Send a direct message below.
+                        Hiring for a junior fullstack role? I’d be happy to discuss my work and your team’s needs.
                     </p>
                 </div>
 
                 {/* Form & Direct Details Grid */}
                 <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 mb-8">
                     {/* Contact Form */}
-                    <div className="lg:col-span-7 rounded-[12px] border border-border bg-surface p-6 sm:p-8">
+                    <div className="blueprint-panel lg:col-span-7 p-5 sm:p-6">
                         <form onSubmit={handleSubmit} className="space-y-4">
                             <div>
                                 <label htmlFor="contact-name" className="block text-xs font-mono text-text-muted mb-2">
@@ -99,6 +93,7 @@ const Contact = () => {
                                     id="contact-name"
                                     type="text"
                                     name="name"
+                                    autoComplete="name"
                                     required
                                     value={formData.name}
                                     onChange={handleInputChange}
@@ -115,6 +110,7 @@ const Contact = () => {
                                     id="contact-email"
                                     type="email"
                                     name="email"
+                                    autoComplete="email"
                                     required
                                     value={formData.email}
                                     onChange={handleInputChange}
@@ -141,14 +137,14 @@ const Contact = () => {
 
                             {/* Status notifications */}
                             {status.success && (
-                                <div className="p-3 rounded-[6px] bg-accent/10 border border-accent/20 text-accent text-xs flex items-center gap-2 animate-fade-up">
+                                <div role="status" className="p-3 rounded-[6px] bg-accent/10 border border-accent/20 text-accent text-xs flex items-center gap-2 animate-fade-up">
                                     <Check size={14} />
                                     <span>Message sent successfully! I will get back to you soon.</span>
                                 </div>
                             )}
 
                             {status.error && (
-                                <div className="p-3 rounded-[6px] bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2 animate-fade-up">
+                                <div role="alert" className="p-3 rounded-[6px] bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2 animate-fade-up">
                                     <AlertCircle size={14} />
                                     <span>{status.error}</span>
                                 </div>
@@ -189,9 +185,7 @@ const Contact = () => {
                                     className="
                                         group
                                         p-5
-                                        rounded-[10px]
-                                        border border-border
-                                        bg-surface
+                                        blueprint-panel
                                         hover:bg-surface-2
                                         hover:border-accent
                                         hover:-translate-y-0.5

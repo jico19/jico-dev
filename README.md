@@ -1,69 +1,60 @@
-# 💻 Jerwin Quijano - Full Stack Portfolio
+# Jerwin Nico Quijano | Fullstack Developer
 
-Welcome to the repository for my developer portfolio! I am a Full Stack Developer specializing in robust backend systems, secure REST APIs, and highly interactive, smooth-experience Single Page Applications (SPAs).
+Personal portfolio for junior fullstack opportunities. Built with React, Vite, and Tailwind CSS.
 
----
+The site presents a freelance fullstack developer based in the Philippines, with paid client work, an ongoing US healthcare client project, and FarmPass. FarmPass remains labelled as a capstone project.
 
-## ⚡ Key Highlights & Features
+## Experience and project content
 
-- **Fluid SPA Transitions**: Embedded custom `ScrollReveal` hooks using `IntersectionObserver` and *EaseOutExpo* easing for premium fade-and-slide entry transitions.
-- **Dynamic ScrollSpy**: Highlights active sections in the header capsule navigation as you scroll or click.
-- **Responsive Mobile Navigation**: Designed a responsive drawer slide overlay menu with background filters and resize hooks.
-- **Accented Theme**: Minimalistic dark theme (`zinc-900`/`zinc-800`) focused on clean typography, readable layouts, and performance.
+The shared experience data lives in `src/data/experienceData.js`. Project summaries in `src/data/projectsData.js` reuse its dates.
 
----
+- Freelance development for clients: 2024 to present.
+- Healthcare client project: August 2026 to present.
+- FarmPass: January 2026 to present. Pre-oral defense completed in June 2026; final defense scheduled for the third week of November 2026.
 
-## 🛠️ Tech Stack
+These dates and engagement types were confirmed by the portfolio owner in November 2026. Update the defense status after the event. Keep the linked resume consistent when replacing it.
 
-- **Backend / APIs**: Python, Django, Django REST Framework (DRF)
-- **Frontend / Styling**: React (v19), Tailwind CSS (v4), React Icons
-- **Database / GIS**: PostgreSQL, Geospatial Mapping
-- **Development Tooling**: Vite, ESLint
+Project summaries describe the scope and current status. Detailed case studies, unsupported outcome metrics, placeholder testimonials, and school project sales copy have been removed.
 
----
+## Development
 
-## 📂 Project Showcase
+Requirements: Node.js compatible with the installed Vite version, and npm.
 
-### 🐷 FarmPass (Capstone Project)
-- **Description**: A permit processing and geospatial mapping web application built for the Municipal Agriculture Office of Sariaya.
-- **Tech Stack**: Django, DRF, React, PostgreSQL.
-- **Live Site**: [farmpass-ph.me](https://farmpass-ph.me/)
-
----
-
-## 🚀 Getting Started
-
-To run the portfolio application locally:
-
-### 1. Clone & Install
-```bash
-# Clone the repository
-git clone https://github.com/jico19/jico-dev.git
-
-# Navigate to the workspace
-cd jico-dev
-
-# Install dependencies
+```sh
 npm install
-```
-
-### 2. Run Development Server
-```bash
 npm run dev
 ```
-Open `http://localhost:5173` in your browser.
 
-### 3. Production Build
-To build and optimize the portfolio for hosting:
-```bash
+Open the local address printed by Vite.
+
+```sh
+npm run lint
 npm run build
+npm run preview
 ```
 
-> [!NOTE]
-> **Windows/PowerShell Security Hint**: If script execution is disabled on your machine, bypass it by running the package manager via command prompt or setting the execution bypass flag:
-> ```powershell
-> powershell -ExecutionPolicy Bypass -Command "npm run build"
-> # OR invoke the CMD executable wrapper directly:
-> npm.cmd run build
-> ```
+On Windows, use `npm.cmd` if PowerShell blocks the npm script.
 
+## Contact form
+
+The contact form sends messages with EmailJS. Configure `VITE_EMAILJS_SERVICE_ID`, `VITE_EMAILJS_TEMPLATE_ID`, and `VITE_EMAILJS_PUBLIC_KEY` in a local `.env` file and in the deployment environment. The EmailJS template must accept the sender name, email, reply address, and message. Do not commit environment files.
+
+The form shows loading, success, and error states. LinkedIn remains available as another contact method.
+
+## Main files
+
+- `src/components/Navbar.jsx`: desktop sidebar and native mobile navigation dialog.
+- `src/data/navigationData.js`: shared section order for navigation and scroll telemetry.
+- `src/components/Hero.jsx`: introduction, role, resume, and professional links.
+- `src/components/StackDiagram.jsx`: illustrative React, Python API, and PostgreSQL flow.
+- `src/components/Projects.jsx`: brief project summaries.
+- `src/components/Experience.jsx`: freelance client work and selected development projects.
+- `src/data/technologiesData.js`: shared technology names and usage.
+- `src/pages/TechPage.jsx`: searchable technology list.
+- `public/Jerwin_Quijano_Resume.pdf`: downloadable resume.
+
+The existing `/projects` URL displays the same brief summaries for older links. The site supports light and dark themes and an animation preference.
+
+## Visual design
+
+The portfolio uses a subtle blueprint grid, fine borders, corner marks, and monospace annotations over the existing charcoal and green theme. At widths of 1024px and above, navigation sits in a fixed 224px sidebar. Smaller screens use a compact top bar and a native dialog menu. The original portrait and floating particles are preserved. The desktop application diagram is decorative and hidden on narrower screens.

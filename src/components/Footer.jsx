@@ -1,5 +1,4 @@
 import { ArrowUp } from "lucide-react";
-import MotionToggle from "./MotionToggle";
 
 const Footer = () => {
     const scrollToTop = () => {
@@ -11,13 +10,12 @@ const Footer = () => {
 
     return (
         <footer className="border-t border-border py-8 mt-12 bg-bg">
-            <div className="max-w-[1080px] mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-faint">
+            <div className="max-w-[1080px] mx-auto px-6 md:px-10 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-text-faint">
                 <p className="font-mono text-center sm:text-left">
-                    &copy; 2026 Jerwin Quijano. Process completed with exit code 0.
+                    &copy; {new Date().getFullYear()} Jerwin Nico Quijano
                 </p>
 
                 <div className="flex items-center gap-6">
-                    <MotionToggle />
                     <button
                         type="button"
                         onClick={scrollToTop}

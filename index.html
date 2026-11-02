@@ -2,10 +2,13 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/my-ico.ico" />
+    <link rel="icon" type="image/x-icon" href="/my-ico.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jerwin Quijano | Developer</title>
-    <meta name="description" content="Portfolio of Jerwin Quijano - Backend and Full Stack Developer. Built using Django, React, and PostgreSQL." />
+    <title>Jerwin Nico Quijano | Fullstack Developer</title>
+    <meta name="description" content="Jerwin Nico Quijano is a freelance fullstack developer based in the Philippines, building web applications and tools for clients with React, Python, and PostgreSQL." />
+    <meta property="og:title" content="Jerwin Nico Quijano | Fullstack Developer" />
+    <meta property="og:description" content="Freelance fullstack developer based in the Philippines. React, Python, and PostgreSQL applications for clients. Open to junior fullstack roles." />
+    <meta property="og:type" content="website" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
@@ -25,9 +28,8 @@
     <script>
       (function () {
         try {
-          var reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
           var override = window.localStorage.getItem("jico:motion-override");
-          if (reduced && override !== "on") {
+          if (override === "reduced") {
             document.documentElement.classList.add("motion-reduced");
           }
         } catch (e) {}

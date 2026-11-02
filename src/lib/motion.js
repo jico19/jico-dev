@@ -3,11 +3,6 @@ import { useSyncExternalStore } from "react";
 const STORAGE_KEY = "jico:motion-override";
 const REDUCED_CLASS = "motion-reduced";
 
-const systemPrefersReduced = () =>
-    typeof window !== "undefined" &&
-    typeof window.matchMedia === "function" &&
-    window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
 const readOverride = () => {
     if (typeof window === "undefined") return null;
     try {
@@ -26,8 +21,7 @@ const emitChange = () => {
 };
 
 export const getAnimationsEnabled = () => {
-    if (override === "reduced") return false;
-    return true;
+    return override !== "reduced";
 };
 
 export const setAnimationsEnabled = (enabled) => {
