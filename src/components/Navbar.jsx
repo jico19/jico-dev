@@ -36,7 +36,7 @@ const Navbar = () => {
     const [isOpen, setIsOpen] = useState(false);
     const dialogRef = useRef(null);
     const triggerRef = useRef(null);
-    const selectedSection = currentPath === "/tech" ? "skills" : currentPath === "/projects" ? "projects" : activeSection;
+    const selectedSection = currentPath === "/tech" ? "skills" : currentPath.startsWith("/projects") ? "projects" : activeSection;
 
     useEffect(() => {
         if (currentPath !== "/") return;

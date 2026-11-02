@@ -2,6 +2,7 @@ import { ArrowUpRight, Lock } from "lucide-react";
 import PageOrientation from "./PageOrientation";
 import ScrollReveal from "./ScrollReveal";
 import { PROJECT_DATA } from "../data/projectsData";
+import { navigate } from "../lib/router";
 
 const Projects = () => (
     <section id="projects" aria-labelledby="projects-heading" className="max-w-[1080px] mx-auto px-6 md:px-10 py-12 md:py-16">
@@ -31,6 +32,14 @@ const Projects = () => (
                                 )}
                             </div>
                             <p className="mt-2 text-sm text-text-muted leading-relaxed">{project.description}</p>
+                            {project.caseStudyPath && (
+                                <a href={project.caseStudyPath} onClick={(event) => {
+                                    event.preventDefault();
+                                    navigate(project.caseStudyPath);
+                                }} className="mt-2 min-h-11 inline-flex items-center gap-1 text-xs font-medium text-accent hover:text-text-main transition-colors">
+                                    Read case study <ArrowUpRight size={14} aria-hidden="true" />
+                                </a>
+                            )}
                             <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs">
                                 <span className="text-accent">{project.status}</span>
                                 {project.client && (

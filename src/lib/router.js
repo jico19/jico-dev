@@ -6,6 +6,7 @@ const parseRoute = () => {
     const hash = window.location.hash.toLowerCase();
 
     if (pathname === "/tech" || hash === "#/tech") return "/tech";
+    if (pathname === "/projects/farmpass" || hash === "#/projects/farmpass") return "/projects/farmpass";
     if (pathname === "/projects" || hash === "#/projects") return "/projects";
     return "/";
 };

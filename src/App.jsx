@@ -11,6 +11,7 @@ import AsciiParticles from "./components/AsciiParticles";
 import ScrollTelemetry from "./components/ScrollTelemetry";
 import TechPage from "./pages/TechPage";
 import ProjectsPage from "./pages/ProjectsPage";
+import FarmPassCaseStudy from "./pages/FarmPassCaseStudy";
 import { useCurrentPath } from "./lib/router";
 import { Analytics } from "@vercel/analytics/react";
 
@@ -25,7 +26,7 @@ function App() {
             {isHome && <Analytics />}
             <Navbar />
             <div id="main-content" tabIndex={-1} className="portfolio-content relative z-10 pt-16 lg:pl-56 lg:pt-0">
-                {currentPath === "/tech" ? <TechPage /> : currentPath === "/projects" ? <ProjectsPage /> : (
+                {currentPath === "/tech" ? <TechPage /> : currentPath === "/projects/farmpass" ? <FarmPassCaseStudy /> : currentPath === "/projects" ? <ProjectsPage /> : (
                     <main className="portfolio-main page-orientations">
                         <Hero />
                         <Projects />

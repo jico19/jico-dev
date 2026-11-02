@@ -4,7 +4,7 @@ export const PROJECT_DATA = [
     {
         id: "farmpass",
         label: "FarmPass",
-        category: "Capstone project",
+        category: "Solo-built full-stack capstone prototype",
         client: FARMPASS_EXPERIENCE.client,
         status: "Preparing for final defense",
         role: FARMPASS_EXPERIENCE.title,
@@ -12,7 +12,8 @@ export const PROJECT_DATA = [
         web_link: "https://farmpass-ph.me/",
         tech: ["React", "Django REST Framework", "PostgreSQL", "MapLibre"],
         description:
-            "Livestock permit applications, document review, QR verification, and barangay survey maps.",
+            "Livestock transport permit prototype with guarded reviews, audit records, OCR-assisted document checks, UUID-based QR verification, checkpoint logs, and barangay survey maps.",
+        caseStudyPath: "/projects/farmpass",
         progress:
             "Started in January 2026. Pre-oral defense completed in June, with final defense scheduled for the third week of November 2026.",
     },

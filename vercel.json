@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/tech", "destination": "/index.html" },
+    { "source": "/projects", "destination": "/index.html" },
+    { "source": "/projects/farmpass", "destination": "/index.html" }
+  ]
+}

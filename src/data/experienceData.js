@@ -14,15 +14,16 @@ export const HEALTHCARE_EXPERIENCE = {
 
 export const FARMPASS_EXPERIENCE = {
     id: "farmpass",
-    title: "Fullstack Developer",
-    company: "FarmPass · Capstone project",
+    title: "Solo Full-Stack Developer",
+    company: "FarmPass · Capstone prototype",
     client: "Sariaya Municipal Agricultural Office",
     period: "January 2026 to present",
     current: true,
-    type: "Capstone project",
+    type: "Capstone prototype",
     responsibilities: [
-        "Developing a livestock transport permit management system using React, Django REST Framework, and PostgreSQL.",
-        "The project includes online applications, document review, QR permit lookup, and barangay survey maps.",
+        "Solely building the React, Django REST Framework, and PostgreSQL livestock transport permit prototype.",
+        "Implemented guarded MAO and OPV approval transitions with audit records and OCR-assisted document review with a manual fallback.",
+        "Built UUID-based QR permit verification, checkpoint logging, and barangay survey maps; PayMongo is a payment integration prototype.",
         "Pre-oral defense completed in June 2026. Final defense is scheduled for the third week of November 2026.",
     ],
 };

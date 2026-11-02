@@ -24,7 +24,7 @@ const About = () => (
                     </p>
                     <p>
                         My current work includes a healthcare platform for a US client
-                        and FarmPass, a livestock permit management system.
+                        and FarmPass, a solo-built livestock permit capstone prototype.
                         I’m open to junior fullstack opportunities.
                     </p>
                     <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 font-mono text-xs">

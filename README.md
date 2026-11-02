@@ -14,7 +14,7 @@ The shared experience data lives in `src/data/experienceData.js`. Project summar
 
 These dates and engagement types were confirmed by the portfolio owner in November 2026. Update the defense status after the event. Keep the linked resume consistent when replacing it.
 
-Project summaries describe the scope and current status. Detailed case studies, unsupported outcome metrics, placeholder testimonials, and school project sales copy have been removed.
+Project summaries describe the scope and current status. FarmPass has a concise case study at `/projects/farmpass`; its copy is grounded in `CASE_STUDY_AUDIT.md` and avoids outcome claims.
 
 ## Development
 
@@ -52,6 +52,8 @@ The form shows loading, success, and error states. LinkedIn remains available as
 - `src/data/technologiesData.js`: shared technology names and usage.
 - `src/pages/TechPage.jsx`: searchable technology list.
 - `public/Jerwin_Quijano_Resume.pdf`: downloadable resume.
+- `resume/build_resume.py`: editable resume source; install `resume/requirements.txt` and run the script to regenerate the one-page PDF.
+- `vercel.json`: SPA fallback for direct visits to `/tech` and the case-study route.
 
 The existing `/projects` URL displays the same brief summaries for older links. The site supports light and dark themes and an animation preference.
 
