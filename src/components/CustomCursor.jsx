@@ -57,7 +57,7 @@ const CustomCursor = () => {
         const onMouseLeave = () => setIsVisible(false);
         const onMouseEnter = () => setIsVisible(true);
 
-        // 60-120fps lerp trailing ring loop
+        // 60-120fps lerp trailing square loop
         const render = () => {
             ringX += (mouseX - ringX) * 0.2;
             ringY += (mouseY - ringY) * 0.2;
@@ -100,25 +100,25 @@ const CustomCursor = () => {
 
     return (
         <div className="hidden lg:block pointer-events-none fixed inset-0 z-[100] overflow-hidden" aria-hidden="true">
-            {/* Center precision dot */}
+            {/* Center precision square */}
             <div
                 ref={cursorDotRef}
-                className={`fixed top-0 left-0 -ml-1 -mt-1 w-2 h-2 rounded-full bg-accent transition-opacity duration-150 ${
+                className={`fixed top-0 left-0 -ml-1 -mt-1 w-2 h-2 rounded-none bg-accent transition-opacity duration-150 ${
                     isVisible ? (isHovered ? "opacity-0" : "opacity-90") : "opacity-0"
                 }`}
                 style={{ willChange: "transform" }}
             />
 
-            {/* Trailing smooth magnetic ring */}
+            {/* Trailing smooth magnetic square */}
             <div
                 ref={cursorRingRef}
-                className={`fixed top-0 left-0 rounded-full border border-accent/60 transition-[width,height,margin,border-color,background-color,opacity,transform] duration-200 ease-out ${
+                className={`fixed top-0 left-0 rounded-none border border-accent/60 transition-[width,height,margin,border-color,background-color,opacity] duration-200 ease-out ${
                     isVisible ? "opacity-100" : "opacity-0"
                 } ${
-                    isHovered
-                        ? "-ml-5 -mt-5 w-10 h-10 border-accent bg-accent/15 scale-105"
-                        : isClicked
-                        ? "-ml-3 -mt-3 w-6 h-6 border-accent bg-accent/30 scale-90"
+                    isClicked
+                        ? "-ml-3 -mt-3 w-6 h-6 border-accent bg-accent/30"
+                        : isHovered
+                        ? "-ml-5 -mt-5 w-10 h-10 border-accent bg-accent/15"
                         : "-ml-3.5 -mt-3.5 w-7 h-7"
                 }`}
                 style={{ willChange: "transform" }}
