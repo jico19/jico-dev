@@ -57,6 +57,14 @@ const Experience = () => {
                                     </span>
                                 </div>
 
+                                {exp.tech && (
+                                    <ul className="mb-4 flex flex-wrap gap-x-3 gap-y-1 text-xs font-mono text-text-muted" aria-label={`${exp.title} technologies`}>
+                                        {exp.tech.map((tech) => (
+                                            <li key={tech}>{tech}</li>
+                                        ))}
+                                    </ul>
+                                )}
+
                                 {/* Responsibilities list with clean dot markers */}
                                 <ul className="space-y-2.5">
                                     {exp.responsibilities.map((item, i) => (

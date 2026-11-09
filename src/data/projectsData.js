@@ -19,16 +19,16 @@ export const PROJECT_DATA = [
     },
     {
         id: "healthcare",
-        label: "Healthcare Operations Platform",
+        label: HEALTHCARE_EXPERIENCE.title,
         category: "Freelance client project",
         client: "ST Business Consulting (US)",
         status: "In development",
-        role: HEALTHCARE_EXPERIENCE.title,
+        role: HEALTHCARE_EXPERIENCE.role,
         timeline: HEALTHCARE_EXPERIENCE.period,
         web_link: null,
-        tech: ["React", "FastAPI", "PostgreSQL", "Supabase"],
+        tech: HEALTHCARE_EXPERIENCE.tech,
         description:
-            "Healthcare workflows for caregiver onboarding, client intake, and scheduling.",
+            "Developing a unified healthcare operations platform for home-care agencies across Florida, Indiana, and Georgia, with caregiver onboarding, credential and training management, a client portal, state-scoped access, and administrative dashboards.",
         progress:
             "Client work began in August 2026 and is ongoing. The application is private.",
     },

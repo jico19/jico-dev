@@ -22,9 +22,9 @@ const TechStack = () => (
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
                 {TECHNOLOGY_CATEGORIES.map((category) => (
-                    <div key={category} className="blueprint-panel p-5">
+                    <div key={category} className={`blueprint-panel p-5 ${category === "AI Tools" ? "sm:col-span-2 xl:col-span-4" : ""}`}>
                         <h3 className="text-xs font-mono uppercase tracking-wider text-text-main mb-4">{category}</h3>
-                        <ul className="space-y-3">
+                        <ul className={category === "AI Tools" ? "grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-3" : "space-y-3"}>
                             {TECHNOLOGIES.filter((tech) => tech.category === category).map((tech) => {
                                 const Icon = tech.icon;
                                 return (

@@ -14,13 +14,13 @@ from reportlab.platypus import (
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "public" / "Jerwin_Quijano_Resume.pdf"
 
-normal = ParagraphStyle("normal", fontName="Helvetica", fontSize=9.5, leading=12.1, spaceAfter=0)
+normal = ParagraphStyle("normal", fontName="Helvetica", fontSize=9.5, leading=11.5, spaceAfter=0)
 bold = ParagraphStyle("bold", parent=normal, fontName="Helvetica-Bold")
 section_style = ParagraphStyle("section", parent=bold, fontSize=10.8, leading=13)
 center = ParagraphStyle("center", parent=normal, alignment=TA_CENTER)
 name = ParagraphStyle("name", parent=center, fontName="Helvetica-Bold", fontSize=17, leading=20)
 small = ParagraphStyle("small", parent=normal, fontSize=9.1, leading=11.5)
-bullet_style = ParagraphStyle("bullet", parent=normal, leftIndent=12, firstLineIndent=-9, spaceAfter=3)
+bullet_style = ParagraphStyle("bullet", parent=normal, leftIndent=12, firstLineIndent=-9, spaceAfter=2)
 
 
 def p(text, style=normal):
@@ -28,7 +28,7 @@ def p(text, style=normal):
 
 
 def heading(text):
-    return [Spacer(1, 9), p(text, section_style), Spacer(1, 2), HRFlowable(width="100%", thickness=.55, color=colors.black), Spacer(1, 9)]
+    return [Spacer(1, 6), p(text, section_style), Spacer(1, 2), HRFlowable(width="100%", thickness=.55, color=colors.black), Spacer(1, 6)]
 
 
 def row(left, right):
@@ -66,11 +66,14 @@ story += [p("DALUBHASAAN NG LUNGSOD NG LUCENA", bold),
 story += heading("WORK EXPERIENCE")
 story += [p("ST BUSINESS CONSULTING - US CLIENT", bold),
           row("Freelance Full-Stack Developer", "August 2026-Present"),
-          p("React, FastAPI, PostgreSQL, Supabase", small), Spacer(1, 6),
-          bullet("Building an ongoing healthcare operations platform for Florida, Indiana, and Georgia, handling frontend and backend implementation."),
-          bullet("Implemented caregiver onboarding, credential tracking, client intake, service agreements, care plans, authorizations, and scheduling workflows."),
-          bullet("Implemented state-scoped authorization and data-access boundaries to restrict access to authorized records."),
-          bullet("Built audit logging, electronic signatures, and data-retention workflows; organized backend components into modular application features."),
+          p("Multi-State Caregiver Management Platform | Freelance Project", small),
+          p("React, TypeScript, Django, Django REST Framework, PostgreSQL, Axios", small), Spacer(1, 6),
+          bullet("Developing a unified healthcare operations platform for home-care agencies across Florida, Indiana, and Georgia."),
+          bullet("Building caregiver onboarding with online applications, document verification, credential expiration tracking, and training management."),
+          bullet("Developing a client portal for digital intake, document submissions, care plans, service schedules, and authorization tracking."),
+          bullet("Designing role-based access control (RBAC), state-scoped permissions, secure authentication, and audit logging to protect sensitive records."),
+          bullet("Building administrative dashboards for caregiver compliance, client admissions, credential monitoring, and operational reporting."),
+          bullet("Planning automated email/SMS notifications, expiration reminders, and electronic signature workflows."),
           Spacer(1, 6), p("INDEPENDENT CLIENT PROJECTS", bold),
           row("Freelance Developer", "2024-Present"),
           bullet("Building paid client tools and web applications, working from project requirements through implementation.")]
@@ -86,11 +89,12 @@ story += [p("FARMPASS - LIVESTOCK TRANSPORT PERMIT SYSTEM", bold),
           bullet("Built UUID-based QR permit verification, checkpoint logging, and barangay survey maps.")]
 
 story += heading("TECHNICAL SKILLS")
-story += [p("<b>Languages:</b> Python, JavaScript, HTML, CSS"),
-          p("<b>Backend:</b> Django, Django REST Framework, FastAPI, REST APIs, JWT authentication"),
-          p("<b>Frontend:</b> React 19, Vite, Tailwind CSS"),
-          p("<b>Databases and Integrations:</b> PostgreSQL, Supabase, PayMongo API"),
-          p("<b>Tools and Workflow:</b> Git, GitHub, automated testing, technical documentation, AI coding assistants")]
+story += [p("<b>Languages:</b> Python, JavaScript, TypeScript, HTML, CSS"),
+          p("<b>Backend:</b> Django, Django REST Framework, REST APIs, JWT authentication"),
+          p("<b>Frontend:</b> React 19, Vite, Tailwind CSS, Axios"),
+          p("<b>Databases and Integrations:</b> PostgreSQL, PayMongo API"),
+          p("<b>Tools and Workflow:</b> Git, GitHub, automated testing, technical documentation"),
+          p("<b>AI Tools:</b> Claude Code, Codex, AntiGravity, Lovable")]
 
 doc = SimpleDocTemplate(str(OUTPUT), pagesize=letter, leftMargin=48, rightMargin=48,
                         topMargin=40, bottomMargin=39, title="Jerwin Nico H. Quijano Resume",
