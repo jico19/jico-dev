@@ -1,6 +1,5 @@
 import { ArrowDownRight, ArrowUpRight } from "lucide-react";
 import { FaGithub, FaLinkedin } from "react-icons/fa";
-import StackDiagram from "./StackDiagram";
 
 const Hero = () => (
     <section id="home" aria-labelledby="home-heading" className="blueprint-hero max-w-[1080px] mx-auto px-6 py-12 md:px-10 md:py-14">
@@ -36,7 +35,6 @@ const Hero = () => (
                     <a href="https://www.linkedin.com/in/jerwin-nico-h-quijano-0471343b7/" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 hover:text-text-main"><FaLinkedin size={14} aria-hidden="true" /> LinkedIn <ArrowUpRight size={11} aria-hidden="true" /></a>
                 </div>
             </div>
-            <div className="hidden xl:block"><StackDiagram /></div>
         </div>
         <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4 font-mono text-[9px] uppercase tracking-[0.16em] text-text-faint">
             <span>Client work / Independent projects</span>

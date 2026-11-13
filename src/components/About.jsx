@@ -17,16 +17,7 @@ const About = () => (
                         <PageOrientation pageOrientation="About" />
                         <h2 id="about-heading" className="text-3xl md:text-4xl font-medium tracking-tight leading-tight text-text-main">Jerwin Nico Quijano</h2>
                     </div>
-                    <p>
-                        I’m a freelance fullstack developer based in the Philippines.
-                        Since 2024, I’ve built tools and web applications for clients
-                        using React, Python, and PostgreSQL.
-                    </p>
-                    <p>
-                        My current work includes a healthcare platform for a US client
-                        and FarmPass, a solo-built livestock permit capstone prototype.
-                        I’m open to junior fullstack opportunities.
-                    </p>
+                    <p>I'm Jerwin Nico H. Quijano, a backend-focused Full-Stack Developer from the Philippines. I develop web applications, backend systems, and RESTful APIs using React, Django, Next.js, Flask, and FastAPI. I use AI-assisted development to accelerate workflows and deliver maintainable software solutions.</p>
                     <div className="flex flex-wrap gap-x-5 gap-y-2 pt-2 font-mono text-xs">
                         <a href="https://github.com/jico19" target="_blank" rel="noopener noreferrer" className="min-h-11 inline-flex items-center gap-1 hover:text-text-main transition-colors">
                             github <ArrowUpRight size={12} aria-hidden="true" />
