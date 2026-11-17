@@ -51,8 +51,9 @@ The form shows loading, success, and error states. LinkedIn remains available as
 - `src/components/Experience.jsx`: freelance client work and selected development projects.
 - `src/data/technologiesData.js`: shared technology names and usage.
 - `src/pages/TechPage.jsx`: searchable technology list.
+- `src/components/CaseStudy.jsx`: reusable case study page; takes one study object and renders the hero, sections, and close.
+- `src/data/caseStudiesData.js`: case study copy, facts, workflow steps, and links.
 - `public/Jerwin_Quijano_Resume.pdf`: downloadable resume.
-- `resume/build_resume.py`: editable resume source; install `resume/requirements.txt` and run the script to regenerate the one-page PDF.
 - `vercel.json`: SPA fallback for direct visits to `/tech` and the case-study route.
 
 The existing `/projects` URL displays the same brief summaries for older links. The site supports light and dark themes and an animation preference.

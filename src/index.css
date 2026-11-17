@@ -284,6 +284,86 @@ body {
   animation-play-state: paused;
 }
 
+/* Case study workflow: one connector line, markers sit on it, a single pulse travels it */
+.case-study-flow {
+  position: relative;
+}
+
+.case-study-flow::before {
+  content: "";
+  position: absolute;
+  top: 20px;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+  pointer-events: none;
+}
+
+.case-study-flow::after {
+  content: "";
+  position: absolute;
+  top: 19px;
+  left: 0;
+  width: 10px;
+  height: 3px;
+  background: var(--accent);
+  opacity: 0;
+  pointer-events: none;
+  animation: case-study-flow-travel 3.4s linear infinite;
+}
+
+.case-study-flow:hover::after {
+  animation-play-state: paused;
+}
+
+.case-study-flow-marker {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: var(--surface);
+  color: var(--accent);
+}
+
+@keyframes case-study-flow-travel {
+  0% { left: 0; opacity: 0; }
+  8% { opacity: 1; }
+  88% { opacity: 1; }
+  100% { left: calc(100% - 10px); opacity: 0; }
+}
+
+@media (max-width: 767px) {
+  .case-study-flow::before {
+    top: 0;
+    bottom: 0;
+    left: 20px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+
+  .case-study-flow::after {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .case-study-flow::after {
+    display: none;
+  }
+}
+
+html.motion-reduced .case-study-flow::after {
+  display: none;
+}
+
 /* Subtle standard transitions */
 .transition-standard {
   transition: all 180ms cubic-bezier(0.2, 0, 0, 1);
